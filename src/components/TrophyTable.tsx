@@ -1,11 +1,11 @@
 import React from 'react';
+import LinearGradient from 'react-native-linear-gradient';
 
-// import { generateTrophyEmoji } from '../utils/generateTrophyEmoji';
 import { useFetch } from '../utils/useFetch';
 import { Text, TouchableOpacity, View } from 'react-native';
 import { getColor, tailwind } from '../utils/tailwind';
 import { generateTrophyEmoji } from '../utils/generateTrophyEmoji';
-import LinearGradient from 'react-native-linear-gradient';
+
 import { Button } from './Button';
 // import { LoaderSvg } from '../components/LoaderSvg';
 // import { Error } from '../components/Error';
@@ -45,19 +45,19 @@ export const TrophyTable: React.FC = () => {
               end={{ x: 1, y: 0 }}
               colors={[getColor('red-200'), getColor('red-300')]}
               style={tailwind('px-4 py-3 bg-red-300 w-40')}>
-              <Text style={tailwind('text-white text-lg font-bold')}>
+              <Text style={tailwind('text-white text-lg font-rubik')}>
                 Player
               </Text>
             </LinearGradient>
             <View style={tailwind('px-4 py-3')}>
-              <Text style={tailwind('text-white text-lg font-bold')}>
+              <Text style={tailwind('text-white text-lg font-rubik')}>
                 Trophies
               </Text>
             </View>
           </View>
           <View>
-            {data.map((pt: any, index: number) => (
-              <View style={tailwind('flex-row')} key={pt.name}>
+            {data.map((item, index) => (
+              <View key={item.name} style={tailwind('flex-row')}>
                 <LinearGradient
                   colors={[
                     getColor(
@@ -69,13 +69,13 @@ export const TrophyTable: React.FC = () => {
                   ]}
                   start={{ x: 0, y: 0 }}
                   end={{ x: 1, y: 0 }}
-                  style={[tailwind('px-4 py-3 w-40 justify-center')]}>
+                  style={[tailwind('px-3 py-3 w-40 justify-center')]}>
                   <TouchableOpacity
                     onPress={() => {
                       console.log('pressed');
                     }}>
-                    <Text style={tailwind('text-white font-bold')}>
-                      {pt.name}
+                    <Text style={tailwind('text-white font-rubik text-sm')}>
+                      {item.name}
                     </Text>
                   </TouchableOpacity>
                 </LinearGradient>
@@ -84,12 +84,12 @@ export const TrophyTable: React.FC = () => {
                     index % 2 !== 0
                       ? tailwind('bg-background-100')
                       : tailwind('bg-background-200'),
-                    tailwind('flex-1 justify-center px-4 py-3'),
+                    tailwind('flex-1 justify-center px-3 py-3'),
                   ]}>
                   <Text style={tailwind('text-lg')}>
-                    {generateTrophyEmoji(pt.trophyCount)}
+                    {generateTrophyEmoji(item.trophyCount)}
                     <Text style={tailwind('opacity-40')}>
-                      {generateTrophyEmoji(pt.unapprovedCount)}
+                      {generateTrophyEmoji(item.unapprovedCount)}
                     </Text>
                   </Text>
                 </View>

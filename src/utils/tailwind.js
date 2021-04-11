@@ -1,5 +1,6 @@
-import {create} from 'tailwind-rn';
+import { create } from 'tailwind-rn';
 import styles from '../styles.json';
+import fonts from '../font-styles.json';
 
-const {tailwind, getColor} = create(styles);
-export {tailwind, getColor};
+const { tailwind, getColor } = create({ ...styles, ...fonts });
+export { tailwind, getColor };

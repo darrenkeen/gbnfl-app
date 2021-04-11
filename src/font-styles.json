@@ -1,0 +1,11 @@
+{
+  "font-rubik": {
+    "fontFamily": "Rubik-Regular"
+  },
+  "font-rubik-bold": {
+    "fontFamily": "Rubik-SemiBold"
+  },
+  "font-rubik-light": {
+    "fontFamily": "Rubik-Light"
+  }
+}

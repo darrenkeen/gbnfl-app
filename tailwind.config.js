@@ -2,9 +2,6 @@ module.exports = {
   purge: [],
   darkMode: false,
   theme: {
-    fontFamily: {
-      body: ['Rubik, arial'],
-    },
     extend: {
       gridTemplateColumns: {
         table: '150px auto',
