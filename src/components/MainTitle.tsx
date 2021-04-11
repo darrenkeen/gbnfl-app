@@ -13,8 +13,11 @@ export const MainTitle: React.FC<MainTitleProps> = ({ title }) => {
       start={{ x: 0, y: 0 }}
       end={{ x: 1, y: 0 }}
       colors={[getColor('red-100'), getColor('red-200')]}
-      style={tailwind('px-5 py-3 mb-3')}>
-      <Text style={tailwind('text-xl text-center text-white')}>{title}</Text>
+      style={tailwind('px-5 py-3 mb-10')}
+    >
+      <Text style={tailwind('text-xl text-center text-white font-rubik')}>
+        {title}
+      </Text>
     </LinearGradient>
   );
 };

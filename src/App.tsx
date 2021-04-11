@@ -38,7 +38,8 @@ const App: React.FC = () => (
           headerTitleStyle: {
             fontWeight: 'bold',
           },
-        }}>
+        }}
+      >
         <Stack.Screen
           name="Home"
           component={HomeScreen}

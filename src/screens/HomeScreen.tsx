@@ -1,14 +1,13 @@
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
-import { View, Image, Text, StatusBar, ScrollView } from 'react-native';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { View, Image, ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { RootStackParamList } from '../App';
 import LogoImage from '../assets/images/logo.png';
-import { MainTitle } from '../components/MainTitle';
 import { TrophyTable } from '../components/TrophyTable';
-import { getColor, tailwind } from '../utils/tailwind';
+import { WeeklyFeature } from '../components/WeeklyFeature';
+import { tailwind } from '../utils/tailwind';
 
 type HomeScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Home'>;
 
@@ -16,9 +15,9 @@ type Props = {
   navigation: HomeScreenNavigationProp;
 };
 
-export const HomeScreen: React.FC<Props> = ({ navigation }) => {
+export const HomeScreen: React.FC<Props> = () => {
   return (
-    <SafeAreaView style={tailwind('bg-background-1000')}>
+    <SafeAreaView style={tailwind('bg-background-1000 flex-1')}>
       <ScrollView>
         <View style={tailwind('justify-center items-center')}>
           <Image
@@ -28,12 +27,7 @@ export const HomeScreen: React.FC<Props> = ({ navigation }) => {
           />
         </View>
         <TrophyTable />
-        <View style={tailwind('mt-10')}>
-          <MainTitle title="Weekly Leaderboard" />
-          <Text>uidsgauidgaiudd</Text>
-          <Text>uidsgauidgaiudd</Text>
-          <Text>uidsgauidgaiudd</Text>
-        </View>
+        <WeeklyFeature />
       </ScrollView>
     </SafeAreaView>
   );
