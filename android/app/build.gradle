@@ -1,6 +1,22 @@
 apply plugin: "com.android.application"
-
 import com.android.build.OutputFile
+import java.io.Console;
+private String readLine(String format, Object... args) throws IOException {
+    if (System.console() != null) {
+        return System.console().readLine(format, args);
+    }
+    System.out.print(String.format(format, args));
+    BufferedReader reader = new BufferedReader(new InputStreamReader(
+            System.in));
+    return reader.readLine();
+}
+
+private char[] readPassword(String format, Object... args)
+        throws IOException {
+    if (System.console() != null)
+        return System.console().readPassword(format, args);
+    return this.readLine(format, args).toCharArray();
+}
 
 /**
  * The react.gradle file registers a task for each build variant (e.g. bundleDebugJsAndAssets
@@ -151,6 +167,12 @@ android {
             storePassword 'android'
             keyAlias 'androiddebugkey'
             keyPassword 'android'
+        }
+        release {
+            storeFile file('main.keystore')
+            storePassword readLine("\nKeystore password:")
+            keyAlias readLine("\nAlias: ")
+            keyPassword readLine("\nAlias password: ")
         }
     }
     buildTypes {
