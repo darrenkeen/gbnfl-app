@@ -1,6 +1,6 @@
 import { StackNavigationProp } from '@react-navigation/stack';
-import React from 'react';
-import { View, Image, ScrollView } from 'react-native';
+import React, { useState } from 'react';
+import { View, Image, ScrollView, RefreshControl } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { RootStackParamList } from '../App';
@@ -16,9 +16,22 @@ type Props = {
 };
 
 export const HomeScreen: React.FC<Props> = () => {
+  const [refreshing, setRefreshing] = useState(false);
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+  }, []);
+
+  const onEndRefresh = () => {
+    setRefreshing(false);
+  };
+
   return (
     <SafeAreaView style={tailwind('bg-background-1000 flex-1')}>
-      <ScrollView>
+      <ScrollView
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
+      >
         <View style={tailwind('justify-center items-center')}>
           <Image
             source={LogoImage}
@@ -26,7 +39,7 @@ export const HomeScreen: React.FC<Props> = () => {
             resizeMode="contain"
           />
         </View>
-        <TrophyTable />
+        <TrophyTable refreshing={refreshing} onEndRefresh={onEndRefresh} />
         <WeeklyFeature />
       </ScrollView>
     </SafeAreaView>

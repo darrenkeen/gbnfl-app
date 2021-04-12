@@ -1,6 +1,7 @@
 import React from 'react';
 import LinearGradient from 'react-native-linear-gradient';
 import { Text, TouchableOpacity, View } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 
 import { useFetch } from '../utils/useFetch';
 import { getColor, tailwind } from '../utils/tailwind';
@@ -11,8 +12,23 @@ import { PlayerTrophies } from '../types';
 import { Loader } from './Loader';
 // import { Error } from '../components/Error';
 
-export const TrophyTable: React.FC = () => {
-  const { status, data, error } = useFetch<PlayerTrophies[]>('/trophies/2', []);
+interface TrophyTableProps {
+  refreshing: boolean;
+  onEndRefresh: () => void;
+}
+
+export const TrophyTable: React.FC<TrophyTableProps> = ({
+  refreshing,
+  onEndRefresh,
+}) => {
+  const navigation = useNavigation();
+  const { status, data, error } = useFetch<PlayerTrophies[]>(
+    '/trophies/2',
+    [],
+    false,
+    refreshing,
+    onEndRefresh,
+  );
 
   if (status !== 'fetched') {
     return <Loader />;
@@ -90,8 +106,8 @@ export const TrophyTable: React.FC = () => {
                 >
                   <Text style={tailwind('text-lg')}>
                     {generateTrophyEmoji(item.trophyCount)}
-                    <Text style={tailwind('opacity-40')}>
-                      {generateTrophyEmoji(item.unapprovedCount)}
+                    <Text style={tailwind('text-white opacity-50')}>
+                      {item.unapprovedCount > 0 && `x${item.unapprovedCount}`}
                     </Text>
                   </Text>
                 </View>
@@ -101,7 +117,10 @@ export const TrophyTable: React.FC = () => {
         </View>
       </View>
       <View style={tailwind('flex justify-center px-5')}>
-        <Button title="Add trophy" onPress={() => console.log('dsad')} />
+        <Button
+          title="Add trophy"
+          onPress={() => navigation.navigate('AddTrophy')}
+        />
       </View>
     </LinearGradient>
   );

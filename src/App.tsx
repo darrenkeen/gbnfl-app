@@ -8,10 +8,12 @@ import { PlayerScreen } from './screens/PlayerScreen';
 
 import { getColor, tailwind } from './utils/tailwind';
 import { View } from 'react-native';
+import AddScreen from './screens/AddScreen';
 
 export type RootStackParamList = {
   Home: undefined;
   Player: undefined;
+  AddTrophy: undefined;
 };
 
 Axios.defaults.baseURL = 'http://localhost:5000/api/v1';
@@ -48,6 +50,7 @@ const App: React.FC = () => (
           }}
         />
         <Stack.Screen name="Player" component={PlayerScreen} />
+        <Stack.Screen name="AddTrophy" component={AddScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   </View>
