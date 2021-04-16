@@ -1,5 +1,5 @@
 {
-  "name": "app",
+  "name": "gbnfl",
   "version": "0.0.1",
   "private": true,
   "scripts": {
@@ -15,6 +15,7 @@
     "@react-navigation/stack": "~5.14.4",
     "autoprefixer": "~10.2.5",
     "axios": "~0.21.1",
+    "date-fns": "~2.21.1",
     "react": "17.0.1",
     "react-native": "0.64.0",
     "react-native-date-picker": "~3.2.10",
@@ -34,11 +35,13 @@
     "@react-native-community/eslint-config": "^2.0.0",
     "@types/jest": "^26.0.20",
     "@types/react-native": "^0.64.0",
+    "@types/react-native-dotenv": "~0.2.0",
     "@types/react-test-renderer": "^16.9.2",
     "babel-jest": "^26.6.3",
     "eslint": "^7.14.0",
     "jest": "^26.6.3",
     "metro-react-native-babel-preset": "^0.64.0",
+    "react-native-dotenv": "~2.5.5",
     "react-test-renderer": "17.0.1",
     "typescript": "^3.8.3"
   },

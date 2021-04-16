@@ -9,7 +9,10 @@ import { TrophyTable } from '../components/TrophyTable';
 import { WeeklyFeature } from '../components/WeeklyFeature';
 import { tailwind } from '../utils/tailwind';
 
-type HomeScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Home'>;
+export type HomeScreenNavigationProp = StackNavigationProp<
+  RootStackParamList,
+  'Home'
+>;
 
 type Props = {
   navigation: HomeScreenNavigationProp;
@@ -26,7 +29,7 @@ export const HomeScreen: React.FC<Props> = () => {
   };
 
   return (
-    <SafeAreaView style={tailwind('bg-background-1000 flex-1')}>
+    <SafeAreaView style={tailwind('bg-background-1000 flex-1 pt-10')}>
       <ScrollView
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />

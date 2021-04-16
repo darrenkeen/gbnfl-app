@@ -8,6 +8,16 @@ import { SafeAreaView, ScrollView, StatusBar, Text, View } from 'react-native';
 import { tailwind } from '../utils/tailwind';
 import { Button } from '../components/Button';
 import { getColor } from 'tailwind-rn';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { RootStackParamList } from '../App';
+
+type AddTrophyScreenNavigationProp = StackNavigationProp<
+  RootStackParamList,
+  'AddTrophy'
+>;
+interface AddTrophyScreenProps {
+  navigation: AddTrophyScreenNavigationProp;
+}
 
 const formatDate = (date: string) => {
   // formats a JS date to 'yyyy-mm-dd'
@@ -27,7 +37,9 @@ const formatDate = (date: string) => {
   return [year, month, day].join('-');
 };
 
-export default function Add() {
+export const AddTrophyScreen: React.FC<AddTrophyScreenProps> = ({
+  navigation,
+}) => {
   const [selectedPlayers, setSelectedPlayers] = useState<
     { kills: number; playerId: string }[]
   >([]);
@@ -50,6 +62,7 @@ export default function Add() {
         season: 2,
         dateTime: formatDate(selectedDate.toISOString()),
       });
+      navigation.goBack();
     } catch (err) {
       setErrors(err.response.data);
     }
@@ -76,9 +89,14 @@ export default function Add() {
   };
 
   return (
-    <SafeAreaView style={tailwind('bg-background-1000 flex-1')}>
+    <SafeAreaView style={tailwind('bg-background-1000 flex-1 mt-10')}>
       <ScrollView>
-        <View style={tailwind('mt-10')}>
+        <Text style={tailwind('text-white text-base px-5 mb-10 text-center')}>
+          Type in the amount of kills for each player. This will automatically
+          select the player but if you need to remove any, just select their
+          name. Enter the date of win below
+        </Text>
+        <View>
           {players.map(player => (
             <PlayerAddBox
               key={player.id}
@@ -112,4 +130,4 @@ export default function Add() {
       </ScrollView>
     </SafeAreaView>
   );
-}
+};

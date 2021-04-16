@@ -1,9 +1,9 @@
-import { MODE_KEYS } from './constants';
+import { MODE_KEYS, PLATFORM_TYPE } from './constants';
 
 export interface PlayerTrophies {
   name: string;
   platformId: string;
-  platformType: string;
+  platformType: keyof typeof PLATFORM_TYPE;
   sbmmUrl: string;
   trophyCount: number;
   unapprovedCount: number;

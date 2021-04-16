@@ -2,27 +2,30 @@ import React from 'react';
 import Axios from 'axios';
 import { createStackNavigator } from '@react-navigation/stack';
 import { NavigationContainer } from '@react-navigation/native';
+import { BASE_URL } from 'react-native-dotenv';
 
 import { HomeScreen } from './screens/HomeScreen';
 import { PlayerScreen } from './screens/PlayerScreen';
 
 import { getColor, tailwind } from './utils/tailwind';
 import { View } from 'react-native';
-import AddScreen from './screens/AddScreen';
+import { AddTrophyScreen } from './screens/AddTrophyScreen';
 
 export type RootStackParamList = {
   Home: undefined;
-  Player: undefined;
+  Player: {
+    name: string;
+  };
   AddTrophy: undefined;
 };
 
-Axios.defaults.baseURL = 'http://localhost:5000/api/v1';
+Axios.defaults.baseURL = BASE_URL || 'base  ';
 Axios.defaults.withCredentials = true;
 
 const Stack = createStackNavigator<RootStackParamList>();
 
 const App: React.FC = () => (
-  <View style={tailwind('flex-1')}>
+  <View style={tailwind('flex-1 bg-background-1000')}>
     <NavigationContainer>
       <Stack.Navigator
         initialRouteName="Home"
@@ -40,6 +43,7 @@ const App: React.FC = () => (
           headerTitleStyle: {
             fontWeight: 'bold',
           },
+          cardStyle: { backgroundColor: getColor('background-1000') },
         }}
       >
         <Stack.Screen
@@ -50,7 +54,7 @@ const App: React.FC = () => (
           }}
         />
         <Stack.Screen name="Player" component={PlayerScreen} />
-        <Stack.Screen name="AddTrophy" component={AddScreen} />
+        <Stack.Screen name="AddTrophy" component={AddTrophyScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   </View>

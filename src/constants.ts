@@ -14,3 +14,9 @@ export const WITH_RANK_MODE = [
   'br_brsolo',
   'br_brtrios',
 ];
+
+export const PLATFORM_TYPE = {
+  battle: 'PC',
+  xbl: 'Xbox',
+  psn: 'PlayStation',
+};

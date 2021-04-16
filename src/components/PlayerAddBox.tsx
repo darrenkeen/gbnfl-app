@@ -53,9 +53,7 @@ export const PlayerAddBox: React.FC<InputGroupProps> = ({
             value={kills ? kills.toString() : ''}
             keyboardType="numeric"
             onChangeText={text => {
-              console.log(text);
               const number = text.replace(/[^0-9]/g, '');
-              console.log(number);
               setKills(Number(number));
               onSelect(Number(number));
             }}
