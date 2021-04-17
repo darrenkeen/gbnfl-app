@@ -195,3 +195,12 @@ export interface MatchData {
   utcStartSeconds: number;
   utcEndSeconds: number;
 }
+
+export type WeeklyPlayerType = Record<
+  keyof typeof MODE_KEYS,
+  { kills: number; deaths: number; kdRatio: number }
+>;
+
+export interface LatestMatchesResponse {
+  matches: CodLatestMatch[];
+}

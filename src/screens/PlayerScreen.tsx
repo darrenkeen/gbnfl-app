@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { SafeAreaView, View, Text } from 'react-native';
+import { SafeAreaView, View, Text, ScrollView } from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
 
 import { tailwind } from '../utils/tailwind';
@@ -11,6 +11,9 @@ import { RouteProp } from '@react-navigation/native';
 import { PlayerTrophies } from '../types';
 import { getPlatformType } from '../utils/getPlatformType';
 import { GlobalData } from '../components/GlobalData';
+import { WeeklyPlayer } from '../components/WeeklyPlayer';
+import { Stat } from '../components/Stat';
+import { LatestMatches } from '../components/LatestMatches';
 
 type PlayerScreenRouteProp = RouteProp<RootStackParamList, 'Player'>;
 
@@ -63,50 +66,54 @@ export const PlayerScreen: React.FC<Props> = ({ route }) => {
 
   return (
     <SafeAreaView style={tailwind('h-full mt-10')}>
-      <View style={tailwind('mb-10')}>
-        <Text
-          style={tailwind(
-            'text-2xl font-bold text-white text-center font-rubik',
-          )}
-        >
-          {name}
-        </Text>
-        <Text style={tailwind('text-red-100 text-center font-rubik')}>
-          {getPlatformType(player.platformType)}
-        </Text>
-      </View>
+      <ScrollView>
+        <View style={tailwind('mb-10')}>
+          <Text
+            style={tailwind(
+              'text-2xl font-bold text-white text-center font-rubik',
+            )}
+          >
+            {name}
+          </Text>
+          <Text style={tailwind('text-red-100 text-center font-rubik')}>
+            {getPlatformType(player.platformType)}
+          </Text>
+        </View>
 
-      <View style={tailwind('mb-20')}>
-        <MainTitle title="Global Stats" />
-        <GlobalData
-          platformId={player.platformId}
-          platformType={player.platformType}
-        />
-      </View>
-      <View style={tailwind('mb-20')}>
-        <MainTitle title="Weekly" />
-        {/* <WeeklyPlayer id={player.platformId} platform={player.platformType} /> */}
-        <Text>WeeklyPlayer</Text>
-      </View>
-      <View style={tailwind('mb-20')}>
-        <MainTitle title="Season 2" />
-        <View style={tailwind('px-5 mt-5')}>
-          <View style={tailwind('justify-between')}>
-            {/* <Stat name="Trophies" value={player.trophyCount.toString()} /> */}
-            {/* <Stat name="Kills" value={player.totalKills.toString()} /> */}
-            <Text>Stats</Text>
+        <View style={tailwind('mb-20')}>
+          <MainTitle title="Global Stats" />
+          <GlobalData
+            platformId={player.platformId}
+            platformType={player.platformType}
+          />
+        </View>
+        <View style={tailwind('mb-20')}>
+          <MainTitle title="Weekly" />
+          <WeeklyPlayer id={player.platformId} platform={player.platformType} />
+        </View>
+        <View style={tailwind('mb-20')}>
+          <MainTitle title="Season 2" />
+          <View style={tailwind('px-5 mt-5')}>
+            <View style={tailwind('justify-between flex-row')}>
+              <View style={tailwind('flex-1 mr-5')}>
+                <Stat name="Trophies" value={player.trophyCount.toString()} />
+              </View>
+              <View style={tailwind('flex-1')}>
+                <Stat name="Kills" value={player.totalKills.toString()} />
+              </View>
+            </View>
           </View>
         </View>
-      </View>
-      <View style={tailwind('mb-20')}>
-        <MainTitle title="Last 20 matches" />
-        {/* <LatestMatches
-          playerRouteName={name as string}
-          platformId={player.platformId}
-          platformType={player.platformType}
-        /> */}
-        <Text>Latest Matches</Text>
-      </View>
+        <View style={tailwind('mb-20')}>
+          <MainTitle title="Last 20 matches" />
+          <LatestMatches
+            playerRouteName={name as string}
+            platformId={player.platformId}
+            platformType={player.platformType}
+          />
+          <Text>Latest Matches</Text>
+        </View>
+      </ScrollView>
     </SafeAreaView>
   );
 };

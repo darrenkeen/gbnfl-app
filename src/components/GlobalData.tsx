@@ -38,21 +38,25 @@ export const GlobalData: React.FC<GlobalDataProps> = ({
 
   return (
     <View style={tailwind('px-5')}>
-      <View style={tailwind('flex justify-between mb-5 text-sm')}>
+      <View style={tailwind('flex-row justify-between mb-5 text-sm')}>
         <LastUpdated cacheTimestamp={data!.cacheTimestamp} />
         <Countdown cacheTimestamp={data!.cacheTimestamp} cacheMinutes={5} />
       </View>
-      <View style={tailwind('flex-row space-x-4')}>
-        <Stat
-          name="K/D"
-          value={data!.data.lifetime.mode.br.properties.kdRatio
-            .toFixed(2)
-            .toString()}
-        />
-        <Stat
-          name="Wins"
-          value={data!.data.lifetime.mode.br.properties.wins.toString()}
-        />
+      <View style={tailwind('flex-row')}>
+        <View style={tailwind('mr-5 flex-1')}>
+          <Stat
+            name="K/D"
+            value={data!.data.lifetime.mode.br.properties.kdRatio
+              .toFixed(2)
+              .toString()}
+          />
+        </View>
+        <View style={tailwind('flex-1')}>
+          <Stat
+            name="Wins"
+            value={data!.data.lifetime.mode.br.properties.wins.toString()}
+          />
+        </View>
       </View>
     </View>
   );
