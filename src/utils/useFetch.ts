@@ -27,7 +27,9 @@ export const useFetch = <T>(
         })
         .catch(err => {
           console.error(err);
-          setError(`There was a problem fetching ${query}`);
+          setError(
+            `There was a problem fetching ${axios.defaults.baseURL}${query}`,
+          );
           setStatus('fetched');
           if (refreshing && onEndRefresh) {
             onEndRefresh();
