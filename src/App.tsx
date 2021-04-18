@@ -11,6 +11,7 @@ import { AddTrophyScreen } from './screens/AddTrophyScreen';
 import { MatchScreen } from './screens/MatchScreen';
 
 import { getColor, tailwind } from './utils/tailwind';
+import SeasonScreen from './screens/SeasonScreen';
 
 export type RootStackParamList = {
   Home: undefined;
@@ -22,6 +23,7 @@ export type RootStackParamList = {
     matchId: string;
     username: string;
   };
+  Season: undefined;
 };
 
 Axios.defaults.baseURL = BASE_URL || 'base  ';
@@ -61,6 +63,7 @@ const App: React.FC = () => (
         <Stack.Screen name="Player" component={PlayerScreen} />
         <Stack.Screen name="AddTrophy" component={AddTrophyScreen} />
         <Stack.Screen name="Match" component={MatchScreen} />
+        <Stack.Screen name="Season" component={SeasonScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   </View>

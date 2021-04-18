@@ -33,17 +33,15 @@ export const PlayerScreen: React.FC<Props> = ({ route }) => {
   const [error, setError] = useState<boolean>(false);
 
   useEffect(() => {
-    if (name) {
-      axios
-        .get(`/trophies/${name}/2`)
-        .then(res => {
-          setPlayer(res.data);
-        })
-        .catch(() => {
-          setError(true);
-        });
-    }
-  }, [name]);
+    axios
+      .get(`/trophies/${name}/2`)
+      .then(res => {
+        setPlayer(res.data);
+      })
+      .catch(() => {
+        setError(true);
+      });
+  }, []);
 
   if (error) {
     return (
