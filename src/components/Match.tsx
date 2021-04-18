@@ -5,6 +5,8 @@ import LinearGradient from 'react-native-linear-gradient';
 import { formatDate } from '../utils/formatDate';
 import { MODE_KEYS, WITH_RANK_MODE } from '../constants';
 import { getColor, tailwind } from '../utils/tailwind';
+import { useNavigation } from '@react-navigation/core';
+import { PlayerScreenNavigationProp } from '../screens/PlayerScreen';
 
 interface MatchProps {
   kills: number;
@@ -14,8 +16,7 @@ interface MatchProps {
   kdRatio: number;
   matchId: string;
   mode: keyof typeof MODE_KEYS;
-  playerRouteName: string;
-  inGameId: string;
+  username: string;
 }
 
 const MatchItem: React.FC<{ title?: string; value: number | string }> = ({
@@ -49,11 +50,16 @@ export const Match: React.FC<MatchProps> = ({
   kdRatio,
   mode,
   matchId,
-  playerRouteName,
-  inGameId,
+  username,
 }) => {
+  const navigation = useNavigation<PlayerScreenNavigationProp>();
+
   return (
-    <TouchableOpacity onPress={() => console.log('pressed')}>
+    <TouchableOpacity
+      onPress={() => {
+        navigation.navigate('Match', { matchId, username });
+      }}
+    >
       <LinearGradient
         colors={[getColor('background-300'), getColor('background-400')]}
         style={tailwind(

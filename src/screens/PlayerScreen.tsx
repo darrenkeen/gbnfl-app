@@ -17,7 +17,7 @@ import { LatestMatches } from '../components/LatestMatches';
 
 type PlayerScreenRouteProp = RouteProp<RootStackParamList, 'Player'>;
 
-type PlayerScreenNavigationProp = StackNavigationProp<
+export type PlayerScreenNavigationProp = StackNavigationProp<
   RootStackParamList,
   'Player'
 >;
@@ -107,11 +107,9 @@ export const PlayerScreen: React.FC<Props> = ({ route }) => {
         <View style={tailwind('mb-20')}>
           <MainTitle title="Last 20 matches" />
           <LatestMatches
-            playerRouteName={name as string}
             platformId={player.platformId}
             platformType={player.platformType}
           />
-          <Text>Latest Matches</Text>
         </View>
       </ScrollView>
     </SafeAreaView>

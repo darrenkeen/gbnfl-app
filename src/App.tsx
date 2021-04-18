@@ -3,13 +3,14 @@ import Axios from 'axios';
 import { createStackNavigator } from '@react-navigation/stack';
 import { NavigationContainer } from '@react-navigation/native';
 import { BASE_URL } from 'react-native-dotenv';
+import { View } from 'react-native';
 
 import { HomeScreen } from './screens/HomeScreen';
 import { PlayerScreen } from './screens/PlayerScreen';
+import { AddTrophyScreen } from './screens/AddTrophyScreen';
+import { MatchScreen } from './screens/MatchScreen';
 
 import { getColor, tailwind } from './utils/tailwind';
-import { View } from 'react-native';
-import { AddTrophyScreen } from './screens/AddTrophyScreen';
 
 export type RootStackParamList = {
   Home: undefined;
@@ -17,6 +18,10 @@ export type RootStackParamList = {
     name: string;
   };
   AddTrophy: undefined;
+  Match: {
+    matchId: string;
+    username: string;
+  };
 };
 
 Axios.defaults.baseURL = BASE_URL || 'base  ';
@@ -55,6 +60,7 @@ const App: React.FC = () => (
         />
         <Stack.Screen name="Player" component={PlayerScreen} />
         <Stack.Screen name="AddTrophy" component={AddTrophyScreen} />
+        <Stack.Screen name="Match" component={MatchScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   </View>
