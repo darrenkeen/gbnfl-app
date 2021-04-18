@@ -14,7 +14,6 @@ import LinearGradient from 'react-native-linear-gradient';
 interface LatestMatchesProps {
   platformId: string;
   platformType: string;
-  playerRouteName: string;
 }
 
 const getGrouped = (matches: CodLatestData['matches']) => {
@@ -37,7 +36,6 @@ const getGrouped = (matches: CodLatestData['matches']) => {
 export const LatestMatches: React.FC<LatestMatchesProps> = ({
   platformId,
   platformType,
-  playerRouteName,
 }) => {
   const {
     status,
@@ -93,8 +91,7 @@ export const LatestMatches: React.FC<LatestMatchesProps> = ({
                 rank={match.playerStats.teamPlacement}
                 kdRatio={match.playerStats.kdRatio}
                 mode={match.mode}
-                playerRouteName={playerRouteName}
-                inGameId={match.player.username}
+                username={match.player.username}
               />
             ))}
           </View>

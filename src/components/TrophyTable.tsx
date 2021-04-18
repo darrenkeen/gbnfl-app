@@ -120,10 +120,17 @@ export const TrophyTable: React.FC<TrophyTableProps> = ({
           </View>
         </View>
       </View>
-      <View style={tailwind('flex justify-center px-5')}>
+      <View style={tailwind('justify-center px-5')}>
         <Button
           title="Add trophy"
           onPress={() => navigation.navigate('AddTrophy')}
+        />
+      </View>
+      <View style={tailwind('justify-center px-5')}>
+        <Button
+          type="outline"
+          title="View wins"
+          onPress={() => navigation.navigate('Season')}
         />
       </View>
     </LinearGradient>
