@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import LinearGradient from 'react-native-linear-gradient';
 import { Text, TouchableOpacity, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
@@ -11,7 +11,7 @@ import { Button } from './Button';
 import { PlayerTrophies } from '../types';
 import { Loader } from './Loader';
 import { HomeScreenNavigationProp } from '../screens/HomeScreen';
-// import { Error } from '../components/Error';
+import axios from 'axios';
 
 interface TrophyTableProps {
   refreshing: boolean;
@@ -23,14 +23,31 @@ export const TrophyTable: React.FC<TrophyTableProps> = ({
   onEndRefresh,
 }) => {
   const navigation = useNavigation<HomeScreenNavigationProp>();
+  const [fetchingTrackMatches, setFetchingTrackMatches] = useState(false);
   const { status, data, error } = useFetch<PlayerTrophies[]>(
-    '/trophies/2',
+    '/trophies/3',
     [],
     false,
     refreshing,
     onEndRefresh,
     navigation,
   );
+
+  const trackMatches = () => {
+    setFetchingTrackMatches(true);
+    axios
+      .get('/matches/track-match')
+      .then((res: any) => {
+        if (res.status !== 204) {
+          console.error({ error: 'Not 204', message: res });
+        }
+        setFetchingTrackMatches(false);
+      })
+      .catch((e: any) => {
+        console.error(e);
+        setFetchingTrackMatches(false);
+      });
+  };
 
   if (status !== 'fetched') {
     return <Loader />;
@@ -123,14 +140,24 @@ export const TrophyTable: React.FC<TrophyTableProps> = ({
       <View style={tailwind('justify-center px-5')}>
         <Button
           title="Add trophy"
-          onPress={() => navigation.navigate('AddTrophy')}
+          disabled={fetchingTrackMatches}
+          loading={fetchingTrackMatches}
+          onPress={() => {
+            if (!fetchingTrackMatches) {
+              trackMatches();
+            }
+          }}
         />
       </View>
       <View style={tailwind('justify-center px-5')}>
         <Button
           type="outline"
           title="View wins"
-          onPress={() => navigation.navigate('Season')}
+          onPress={() =>
+            navigation.navigate('Season', {
+              season: '2',
+            })
+          }
         />
       </View>
     </LinearGradient>

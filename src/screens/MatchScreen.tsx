@@ -69,8 +69,8 @@ export const MatchScreen: React.FC<Props> = ({ route }) => {
   }
 
   return (
-    <SafeAreaView style={tailwind('h-full mt-10')}>
-      <ScrollView>
+    <SafeAreaView style={tailwind('h-full')}>
+      <ScrollView style={tailwind('pt-10')}>
         <View style={tailwind('mb-10')}>
           <Text
             style={tailwind('text-2xl font-rubik-bold text-white text-center')}

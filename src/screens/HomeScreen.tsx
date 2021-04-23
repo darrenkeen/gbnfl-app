@@ -1,6 +1,12 @@
 import { StackNavigationProp } from '@react-navigation/stack';
 import React, { useState } from 'react';
-import { View, Image, ScrollView, RefreshControl } from 'react-native';
+import {
+  View,
+  Image,
+  ScrollView,
+  RefreshControl,
+  StatusBar,
+} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { RootStackParamList } from '../App';
@@ -29,8 +35,9 @@ export const HomeScreen: React.FC<Props> = () => {
   };
 
   return (
-    <SafeAreaView style={tailwind('bg-background-1000 flex-1 pt-10')}>
+    <SafeAreaView style={tailwind('bg-background-1000 flex-1')}>
       <ScrollView
+        style={tailwind('pt-10')}
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }

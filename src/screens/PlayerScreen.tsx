@@ -12,7 +12,6 @@ import { PlayerTrophies } from '../types';
 import { getPlatformType } from '../utils/getPlatformType';
 import { GlobalData } from '../components/GlobalData';
 import { WeeklyPlayer } from '../components/WeeklyPlayer';
-import { Stat } from '../components/Stat';
 import { LatestMatches } from '../components/LatestMatches';
 
 type PlayerScreenRouteProp = RouteProp<RootStackParamList, 'Player'>;
@@ -63,8 +62,8 @@ export const PlayerScreen: React.FC<Props> = ({ route }) => {
   }
 
   return (
-    <SafeAreaView style={tailwind('h-full mt-10')}>
-      <ScrollView>
+    <SafeAreaView style={tailwind('h-full')}>
+      <ScrollView style={tailwind('pt-10')}>
         <View style={tailwind('mb-10')}>
           <Text
             style={tailwind(
@@ -90,16 +89,13 @@ export const PlayerScreen: React.FC<Props> = ({ route }) => {
           <WeeklyPlayer id={player.platformId} platform={player.platformType} />
         </View>
         <View style={tailwind('mb-20')}>
-          <MainTitle title="Season 2" />
+          <MainTitle title="Season Stats" />
           <View style={tailwind('px-5 mt-5')}>
-            <View style={tailwind('justify-between flex-row')}>
-              <View style={tailwind('flex-1 mr-5')}>
-                <Stat name="Trophies" value={player.trophyCount.toString()} />
-              </View>
-              <View style={tailwind('flex-1')}>
-                <Stat name="Kills" value={player.totalKills.toString()} />
-              </View>
-            </View>
+            <Text
+              style={tailwind('text-center text-white font-rubik text-base')}
+            >
+              Coming soon
+            </Text>
           </View>
         </View>
         <View style={tailwind('mb-20')}>
