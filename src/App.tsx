@@ -12,11 +12,12 @@ import { MatchScreen } from './screens/MatchScreen';
 import { SeasonScreen } from './screens/SeasonScreen';
 
 import { getColor, tailwind } from './utils/tailwind';
+import { WinScreen } from './screens/WinScreen';
 
 export type RootStackParamList = {
   Home: undefined;
   Player: {
-    name: string;
+    uno: string;
   };
   AddTrophy: undefined;
   Match: {
@@ -25,6 +26,9 @@ export type RootStackParamList = {
   };
   Season: {
     season: string;
+  };
+  Win: {
+    matchDataId: string;
   };
 };
 
@@ -77,6 +81,11 @@ const App: React.FC = () => (
           name="Season"
           component={SeasonScreen}
           options={{ title: 'Season Wins' }}
+        />
+        <Stack.Screen
+          name="Win"
+          component={WinScreen}
+          options={{ title: 'Win stats' }}
         />
       </Stack.Navigator>
     </NavigationContainer>

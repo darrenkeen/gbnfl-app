@@ -37,7 +37,7 @@ export const WeeklyPlayer: React.FC<{ id: string; platform: string }> = ({
           <Countdown cacheTimestamp={data.cacheTimestamp} cacheMinutes={5} />
         </View>
       </View>
-      {Object.keys(data.data)
+      {Object.keys(data.data.modes)
         .sort(
           (a, b) =>
             Object.keys(MODE_KEYS).indexOf(a) -
@@ -65,7 +65,7 @@ export const WeeklyPlayer: React.FC<{ id: string; platform: string }> = ({
                 <View style={tailwind('flex-1 mr-5')}>
                   <Stat
                     name="K/D"
-                    value={data.data[
+                    value={data.data.modes[
                       key as keyof typeof MODE_KEYS
                     ].kdRatio.toString()}
                   />
@@ -73,7 +73,7 @@ export const WeeklyPlayer: React.FC<{ id: string; platform: string }> = ({
                 <View style={tailwind('flex-1')}>
                   <Stat
                     name="Kills"
-                    value={data.data[
+                    value={data.data.modes[
                       key as keyof typeof MODE_KEYS
                     ].kills.toString()}
                   />

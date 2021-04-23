@@ -4,10 +4,8 @@ export interface PlayerTrophies {
   name: string;
   platformId: string;
   platformType: keyof typeof PLATFORM_TYPE;
-  sbmmUrl: string;
+  uno: string;
   trophyCount: number;
-  unapprovedCount: number;
-  totalKills: number;
 }
 
 export interface Trophy {
@@ -214,18 +212,6 @@ export interface WinMatchPlayer {
   damageTaken: number;
 }
 
-export type WinMatchTeam = Record<
-  string,
-  {
-    players: WinMatchPlayer[];
-    kills: number;
-    deaths: number;
-    teamKdRatio: number;
-    teamSurvivalTime: number;
-    teamPlacement: number;
-  }
->;
-
 export type MatchTeam = Record<
   string,
   {
@@ -252,7 +238,12 @@ export interface MatchData {
 export interface WinMatchData {
   id: string;
   inGameMatchId: string;
-  teams: WinMatchTeam;
+  teams: {
+    id: string;
+    players: WinMatchPlayer[];
+    teamPlacement: number;
+    teamName: string;
+  }[];
   playerCount: number;
   mode: keyof typeof MODE_KEYS;
   duration: number;
@@ -261,10 +252,14 @@ export interface WinMatchData {
   trophies: Trophy[];
 }
 
-export type WeeklyPlayerType = Record<
+export type WeeklyPlayerModes = Record<
   keyof typeof MODE_KEYS,
   { kills: number; deaths: number; kdRatio: number }
 >;
+
+export interface WeeklyPlayerType {
+  modes: WeeklyPlayerModes;
+}
 
 export interface LatestMatchesResponse {
   matches: CodLatestMatch[];

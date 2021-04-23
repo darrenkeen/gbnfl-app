@@ -10,9 +10,15 @@ interface StatRowProps {
   label: string;
   value: string;
   name: string;
+  uno: string;
 }
 
-export const StatRow: React.FC<StatRowProps> = ({ label, value, name }) => {
+export const StatRow: React.FC<StatRowProps> = ({
+  label,
+  value,
+  name,
+  uno,
+}) => {
   const navigation = useNavigation<HomeScreenNavigationProp>();
   return (
     <LinearGradient
@@ -27,7 +33,7 @@ export const StatRow: React.FC<StatRowProps> = ({ label, value, name }) => {
         <TouchableOpacity
           onPress={() => {
             navigation.navigate('Player', {
-              name,
+              uno,
             });
           }}
         >

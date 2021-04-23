@@ -1,5 +1,11 @@
 import React from 'react';
-import { SafeAreaView, ScrollView, Text, View } from 'react-native';
+import {
+  SafeAreaView,
+  ScrollView,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import LinearGradient from 'react-native-linear-gradient';
 import {
@@ -16,8 +22,9 @@ import { useFetch } from '../utils/useFetch';
 import { getColor, tailwind } from '../utils/tailwind';
 import { Button } from '../components/Button';
 import { RootStackParamList } from '../App';
-import { CachedData, WinMatchData, WinMatchPlayer } from '../types';
+import { CachedData, WinMatchData } from '../types';
 import { WinPlayerGroup } from '../components/WinPlayerGroup';
+import { getTeamValueBasedOnKey } from '../utils/teamCalculations';
 
 type SeasonScreenRouteProp = RouteProp<RootStackParamList, 'Season'>;
 
@@ -29,21 +36,6 @@ export type SeasonScreenNavigationProp = StackNavigationProp<
 type Props = {
   navigation: SeasonScreenNavigationProp;
   route: SeasonScreenRouteProp;
-};
-
-const getTeamKills = (players: WinMatchPlayer[]) => {
-  return players.reduce((acc, curr) => acc + curr.kills, 0);
-};
-const getTeamKdRatio = (players: WinMatchPlayer[]) => {
-  const killsDeaths = players.reduce(
-    (acc, curr) => {
-      acc.kills += curr.kills;
-      acc.deaths += curr.deaths;
-      return acc;
-    },
-    { kills: 0, deaths: 0 },
-  );
-  return killsDeaths.kills / (killsDeaths.deaths || 1);
 };
 
 export const SeasonScreen: React.FC<Props> = ({ route }) => {
@@ -87,12 +79,12 @@ export const SeasonScreen: React.FC<Props> = ({ route }) => {
             const date = new Date(0);
             date.setUTCSeconds(game.utcStartSeconds);
             const trophyUnos = game.trophies.map(trophy => trophy.player.uno);
-            const winnersTeamKey = Object.keys(game.teams).find(teamKey => {
-              return game.teams[teamKey].players.find(player =>
+            const winnersTeam = game.teams.find(team => {
+              return team.players.find(player =>
                 trophyUnos.includes(player.uno),
               );
             });
-            if (!winnersTeamKey) {
+            if (!winnersTeam) {
               return null;
             }
             return (
@@ -114,17 +106,29 @@ export const SeasonScreen: React.FC<Props> = ({ route }) => {
                     {date.toDateString()}
                   </Text>
                 </LinearGradient>
-                <View style={tailwind('mt-5 px-4')}>
-                  <WinPlayerGroup
-                    mode={game.mode}
-                    rank={game.teams[winnersTeamKey].teamPlacement}
-                    kills={getTeamKills(game.teams[winnersTeamKey].players)}
-                    teamKdRatio={getTeamKdRatio(
-                      game.teams[winnersTeamKey].players,
-                    )}
-                    players={game.teams[winnersTeamKey].players}
-                  />
-                </View>
+                <TouchableOpacity
+                  onPress={() =>
+                    navigation.navigate('Win', {
+                      matchDataId: game.id,
+                    })
+                  }
+                >
+                  <View style={tailwind('mt-5 px-4')}>
+                    <WinPlayerGroup
+                      mode={game.mode}
+                      rank={winnersTeam.teamPlacement}
+                      kills={getTeamValueBasedOnKey(
+                        winnersTeam.players,
+                        'kills',
+                      )}
+                      teamKdRatio={getTeamValueBasedOnKey(
+                        winnersTeam.players,
+                        'kills',
+                      )}
+                      players={winnersTeam.players}
+                    />
+                  </View>
+                </TouchableOpacity>
               </View>
             );
           })}
@@ -148,7 +152,6 @@ export const SeasonScreen: React.FC<Props> = ({ route }) => {
                             );
                           }
                         }}
-                        // disabled={key === season}
                       />
                     </View>
                   </View>

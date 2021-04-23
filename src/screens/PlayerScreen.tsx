@@ -13,6 +13,7 @@ import { getPlatformType } from '../utils/getPlatformType';
 import { GlobalData } from '../components/GlobalData';
 import { WeeklyPlayer } from '../components/WeeklyPlayer';
 import { LatestMatches } from '../components/LatestMatches';
+import { Error } from '../components/Error';
 
 type PlayerScreenRouteProp = RouteProp<RootStackParamList, 'Player'>;
 
@@ -27,13 +28,13 @@ type Props = {
 };
 
 export const PlayerScreen: React.FC<Props> = ({ route }) => {
-  const name = route.params.name;
+  const uno = route.params.uno;
   const [player, setPlayer] = useState<PlayerTrophies | null>(null);
   const [error, setError] = useState<boolean>(false);
 
   useEffect(() => {
     axios
-      .get(`/trophies/${name}/2`)
+      .get(`/trophies/uno/${uno}/2`)
       .then(res => {
         setPlayer(res.data);
       })
@@ -43,18 +44,7 @@ export const PlayerScreen: React.FC<Props> = ({ route }) => {
   }, []);
 
   if (error) {
-    return (
-      <View>
-        <View style={tailwind('text-center')}>
-          <Text style={tailwind('text-2xl font-bold text-orange-500')}>
-            {name}
-          </Text>
-        </View>
-        <View style={tailwind('text-center')}>
-          <Text style={tailwind('text-xl text-white')}>Player is private</Text>
-        </View>
-      </View>
-    );
+    return <Error message="Please try another player" />;
   }
 
   if (!player) {
@@ -70,7 +60,7 @@ export const PlayerScreen: React.FC<Props> = ({ route }) => {
               'text-2xl font-bold text-white text-center font-rubik',
             )}
           >
-            {name}
+            {player.name}
           </Text>
           <Text style={tailwind('text-red-100 text-center font-rubik')}>
             {getPlatformType(player.platformType)}

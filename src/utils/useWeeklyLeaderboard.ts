@@ -5,10 +5,12 @@ interface WeeklyLeaderboard {
   killsLeader: null | {
     name: string;
     value: string;
+    uno: string;
   };
   kdRatioLeader: null | {
     name: string;
     value: string;
+    uno: string;
   };
 }
 
@@ -27,11 +29,11 @@ export const useWeeklyLeaderboard = () => {
   useEffect(() => {
     if (status === 'fetched' && !error) {
       const kdRatioLeader = Object.keys(data.data).reduce((acc: any, val) => {
-        const next = data.data[val].all;
+        const next = data.data[val].modes.all;
         if (!acc) {
           return { name: val, value: next.kdRatio };
         }
-        const currentLeader = data.data[acc.name].all;
+        const currentLeader = data.data[acc.name].modes.all;
         if (currentLeader.kdRatio > next.kdRatio) {
           return acc;
         }
@@ -44,16 +46,16 @@ export const useWeeklyLeaderboard = () => {
               : acc
             : { name: val, value: next.kdRatio };
         }
-        return { name: val, value: next.kdRatio };
+        return { name: val, value: next.kdRatio, uno: data.data[val].uno };
       }, null);
       const killsLeader = Object.keys(data.data).reduce((acc: any, val) => {
-        const next = data.data[val].all;
+        const next = data.data[val].modes.all;
 
         if (!acc) {
           return { name: val, value: next.kills };
         }
 
-        const currentLeader = data.data[acc.name].all;
+        const currentLeader = data.data[acc.name].modes.all;
         if (currentLeader.kills > next.kills) {
           return acc;
         }
@@ -62,7 +64,7 @@ export const useWeeklyLeaderboard = () => {
             ? acc
             : { name: val, value: next.kills };
         }
-        return { name: val, value: next.kills };
+        return { name: val, value: next.kills, uno: data.data[val].uno };
       }, null);
 
       setWeeklyLeaderboard({ killsLeader, kdRatioLeader });
