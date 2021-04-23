@@ -36,13 +36,21 @@ export const Button: React.FC<ButtonProps> = ({
           style={tailwind('py-3 px-4')}
           colors={[getColor('red-200'), getColor('red-100')]}
         >
-          <Text style={tailwind('text-white text-center text-base font-rubik')}>
+          <Text
+            style={tailwind(
+              'text-white text-center text-base font-rubik uppercase',
+            )}
+          >
             {loading ? 'Please wait..' : title}
           </Text>
         </LinearGradient>
       ) : (
         <View style={tailwind('py-3')}>
-          <Text style={tailwind('text-white text-center text-base font-rubik')}>
+          <Text
+            style={tailwind(
+              'text-white text-center text-base font-rubik uppercase',
+            )}
+          >
             {loading ? <ActivityIndicator size="small" /> : title}
           </Text>
         </View>

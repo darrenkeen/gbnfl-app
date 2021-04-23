@@ -26,7 +26,9 @@ export const StatRow: React.FC<StatRowProps> = ({ label, value, name }) => {
       <View style={tailwind('flex-1')}>
         <TouchableOpacity
           onPress={() => {
-            navigation.navigate('Player');
+            navigation.navigate('Player', {
+              name,
+            });
           }}
         >
           <Text style={tailwind('text-lg text-white font-rubik')}>{name}</Text>

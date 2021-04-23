@@ -139,7 +139,7 @@ export const TrophyTable: React.FC<TrophyTableProps> = ({
       </View>
       <View style={tailwind('justify-center px-5')}>
         <Button
-          title="Add trophy"
+          title="Check for trophies"
           disabled={fetchingTrackMatches}
           loading={fetchingTrackMatches}
           onPress={() => {

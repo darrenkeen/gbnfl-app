@@ -16,6 +16,8 @@ import { useFetch } from '../utils/useFetch';
 import { getColor, tailwind } from '../utils/tailwind';
 import { Button } from '../components/Button';
 import { RootStackParamList } from '../App';
+import { CachedData, WinMatchData, WinMatchPlayer } from '../types';
+import { WinPlayerGroup } from '../components/WinPlayerGroup';
 
 type SeasonScreenRouteProp = RouteProp<RootStackParamList, 'Season'>;
 
@@ -29,10 +31,28 @@ type Props = {
   route: SeasonScreenRouteProp;
 };
 
+const getTeamKills = (players: WinMatchPlayer[]) => {
+  return players.reduce((acc, curr) => acc + curr.kills, 0);
+};
+const getTeamKdRatio = (players: WinMatchPlayer[]) => {
+  const killsDeaths = players.reduce(
+    (acc, curr) => {
+      acc.kills += curr.kills;
+      acc.deaths += curr.deaths;
+      return acc;
+    },
+    { kills: 0, deaths: 0 },
+  );
+  return killsDeaths.kills / (killsDeaths.deaths || 1);
+};
+
 export const SeasonScreen: React.FC<Props> = ({ route }) => {
   const navigation = useNavigation<SeasonScreenNavigationProp>();
   const { season } = route.params;
-  const { data, status, error } = useFetch<any>(`/matches/${season}`, {});
+  const { data, status, error } = useFetch<CachedData<WinMatchData[]> | null>(
+    `/matches/${season}`,
+    null,
+  );
   const {
     data: seasonData,
     status: seasonStatus,
@@ -43,7 +63,7 @@ export const SeasonScreen: React.FC<Props> = ({ route }) => {
     return <Loader />;
   }
 
-  if (error || seasonError) {
+  if (error || seasonError || !data) {
     return <Error message={error || 'Something went wrong'} />;
   }
 
@@ -61,13 +81,20 @@ export const SeasonScreen: React.FC<Props> = ({ route }) => {
           </View>
         )}
         {data.data
-          .filter((dataGame: any) => dataGame.trophies.length !== 0)
-          .sort((a: any, b: any) =>
-            a.utcStartSeconds > b.utcStartSeconds ? -1 : 1,
-          )
-          .map((game: any) => {
+          .filter(dataGame => dataGame.trophies.length !== 0)
+          .sort((a, b) => (a.utcStartSeconds > b.utcStartSeconds ? -1 : 1))
+          .map(game => {
             const date = new Date(0);
             date.setUTCSeconds(game.utcStartSeconds);
+            const trophyUnos = game.trophies.map(trophy => trophy.player.uno);
+            const winnersTeamKey = Object.keys(game.teams).find(teamKey => {
+              return game.teams[teamKey].players.find(player =>
+                trophyUnos.includes(player.uno),
+              );
+            });
+            if (!winnersTeamKey) {
+              return null;
+            }
             return (
               <View key={game.id}>
                 <LinearGradient
@@ -86,18 +113,18 @@ export const SeasonScreen: React.FC<Props> = ({ route }) => {
                   >
                     {date.toDateString()}
                   </Text>
-                  <View style={tailwind('mt-5')}>
-                    {game.trophies.map((trophy: any) => (
-                      <View style={tailwind('mb-4')} key={trophy.id}>
-                        <Text
-                          style={tailwind('font-rubik text-white text-center')}
-                        >
-                          {trophy.name}{' '}
-                        </Text>
-                      </View>
-                    ))}
-                  </View>
                 </LinearGradient>
+                <View style={tailwind('mt-5 px-4')}>
+                  <WinPlayerGroup
+                    mode={game.mode}
+                    rank={game.teams[winnersTeamKey].teamPlacement}
+                    kills={getTeamKills(game.teams[winnersTeamKey].players)}
+                    teamKdRatio={getTeamKdRatio(
+                      game.teams[winnersTeamKey].players,
+                    )}
+                    players={game.teams[winnersTeamKey].players}
+                  />
+                </View>
               </View>
             );
           })}

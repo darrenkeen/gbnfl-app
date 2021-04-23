@@ -12,7 +12,8 @@ export interface PlayerTrophies {
 
 export interface Trophy {
   id: string;
-  kills: number;
+  name: string;
+  player: Player;
 }
 
 export interface Player {
@@ -21,6 +22,7 @@ export interface Player {
   sbmmUrl: string;
   platformId: string;
   platformType: string;
+  uno: string;
 }
 
 export interface ApprovalGame {
@@ -102,7 +104,7 @@ export interface CachedData<T> {
   data: T;
 }
 
-export interface MatchPlayers {
+export interface MatchPlayer {
   utcStartSeconds: number;
   utcEndSeconds: number;
   map: string;
@@ -176,24 +178,87 @@ export interface MatchPlayers {
   teamCount: number;
   privateMatch: boolean;
 }
+export interface WinMatchPlayer {
+  id: string;
+  username: string;
+  uno: string;
+  missionsComplete: number;
+  missionStats: string[];
+  headshots: number;
+  assists: number;
+  scorePerMinute: string;
+  kills: number;
+  score: number;
+  medalXp: number;
+  matchXp: number;
+  scoreXp: number;
+  wallBangs: number;
+  totalXp: number;
+  challengeXp: number;
+  distanceTraveled: string;
+  teamSurvivalTime: string;
+  deaths: number;
+  kdRatio: string;
+  objectiveBrMissionPickupTablet: number;
+  bonusXp: number;
+  gulagDeaths: number;
+  timePlayed: number;
+  executions: number;
+  gulagKills: number;
+  nearmisses: number;
+  objectiveBrCacheOpen: number;
+  percentTimeMoving: string;
+  miscXp: number;
+  longestStreak: number;
+  damageDone: number;
+  damageTaken: number;
+}
+
+export type WinMatchTeam = Record<
+  string,
+  {
+    players: WinMatchPlayer[];
+    kills: number;
+    deaths: number;
+    teamKdRatio: number;
+    teamSurvivalTime: number;
+    teamPlacement: number;
+  }
+>;
+
+export type MatchTeam = Record<
+  string,
+  {
+    players: MatchPlayer[];
+    kills: number;
+    deaths: number;
+    teamKdRatio: number;
+    teamSurvivalTime: number;
+    teamPlacement: number;
+  }
+>;
 
 export interface MatchData {
-  teams: Record<
-    string,
-    {
-      players: MatchPlayers[];
-      kills: number;
-      deaths: number;
-      teamKdRatio: number;
-      teamSurvivalTime: number;
-      teamPlacement: number;
-    }
-  >;
+  id: string;
+  inGameMatchId: string;
+  teams: MatchTeam;
   playerCount: number;
   mode: keyof typeof MODE_KEYS;
   duration: number;
   utcStartSeconds: number;
   utcEndSeconds: number;
+  trophies: Trophy[];
+}
+export interface WinMatchData {
+  id: string;
+  inGameMatchId: string;
+  teams: WinMatchTeam;
+  playerCount: number;
+  mode: keyof typeof MODE_KEYS;
+  duration: number;
+  utcStartSeconds: number;
+  utcEndSeconds: number;
+  trophies: Trophy[];
 }
 
 export type WeeklyPlayerType = Record<
