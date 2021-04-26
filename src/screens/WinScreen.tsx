@@ -34,20 +34,20 @@ type Props = {
 };
 
 const compareOptions = [
-  { label: 'Headshots', value: 'headshots' },
   { label: 'Assists', value: 'assists' },
-  { label: 'SPM', value: 'scorePerMinute' },
-  { label: 'Kills', value: 'kills' },
-  { label: 'Score', value: 'score' },
-  { label: 'Wall Bangs', value: 'wallBangs' },
-  { label: 'Distance', value: 'distanceTraveled' },
   { label: 'Deaths', value: 'deaths' },
-  { label: 'kdRatio', value: 'kdRatio' },
-  { label: 'Gulag Deaths', value: 'gulagDeaths' },
-  { label: 'Gulag Kills', value: 'gulagKills' },
-  { label: 'Longest Streak', value: 'longestStreak' },
+  { label: 'Distance', value: 'distanceTraveled' },
   { label: 'DMG', value: 'damageDone' },
   { label: 'DMG Taken', value: 'damageTaken' },
+  { label: 'Gulag Deaths', value: 'gulagDeaths' },
+  { label: 'Gulag Kills', value: 'gulagKills' },
+  { label: 'Headshots', value: 'headshots' },
+  { label: 'KD Ratio', value: 'kdRatio' },
+  { label: 'Kills', value: 'kills' },
+  { label: 'Longest Streak', value: 'longestStreak' },
+  { label: 'Score', value: 'score' },
+  { label: 'SPM', value: 'scorePerMinute' },
+  { label: 'Wall Bangs', value: 'wallBangs' },
 ];
 
 const Chevron: React.FC = () => {
@@ -171,9 +171,13 @@ export const WinScreen: React.FC<Props> = ({ route }) => {
             <StatRow
               name={player.username}
               uno={player.uno}
-              value={Number(player[compare.value as keyof WinMatchPlayer])
-                .toFixed(2)
-                .toString()}
+              value={
+                Number(player[compare.value as keyof WinMatchPlayer]) % 1 > 0
+                  ? Number(player[compare.value as keyof WinMatchPlayer])
+                      .toFixed(2)
+                      .toString()
+                  : Number(player[compare.value as keyof WinMatchPlayer])
+              }
               label={compare.label}
             />
           ))}
