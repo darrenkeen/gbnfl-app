@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { SafeAreaView, View, Text, ScrollView } from 'react-native';
+import { SafeAreaView, View, Text, ScrollView, Dimensions } from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
+import { LineChart } from 'react-native-chart-kit';
 
 import { tailwind } from '../utils/tailwind';
 import { RootStackParamList } from '../App';

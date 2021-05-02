@@ -2,7 +2,7 @@ import React from 'react';
 import { Text, View } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 
-import { MODE_KEYS } from '../constants';
+import { MODE_KEYS, WITH_RANK_MODE } from '../constants';
 import { MatchPlayers } from '../types';
 import { getColor, tailwind } from '../utils/tailwind';
 
@@ -111,7 +111,7 @@ export const PlayerGroup: React.FC<PlayerGroupProps> = ({
         <View style={tailwind('flex-row justify-between ')}>
           <PlayerGroupItem title="Kills" value={kills} />
           <PlayerGroupItem title="K/D" value={teamKdRatio?.toFixed(2)} />
-          {MODE_KEYS[mode] !== MODE_KEYS.br_dmz_plnbld && (
+          {WITH_RANK_MODE.includes(mode) && (
             <PlayerGroupItem title="rank" value={rank} />
           )}
         </View>

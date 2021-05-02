@@ -45,6 +45,7 @@ const compareOptions = [
   { label: 'KD Ratio', value: 'kdRatio' },
   { label: 'Kills', value: 'kills' },
   { label: 'Longest Streak', value: 'longestStreak' },
+  { label: 'Percentage Moving', value: 'percentTimeMoving' },
   { label: 'Score', value: 'score' },
   { label: 'SPM', value: 'scorePerMinute' },
   { label: 'Wall Bangs', value: 'wallBangs' },
@@ -115,7 +116,7 @@ export const WinScreen: React.FC<Props> = ({ route }) => {
           <View style={tailwind('flex-1 mr-5')}>
             <Stat
               name="KD Ratio"
-              value={getTeamKdRatio(winnersTeam.players).toString()}
+              value={getTeamKdRatio(winnersTeam.players).toFixed(2).toString()}
             />
           </View>
           <View style={tailwind('flex-1')}>
@@ -166,9 +167,10 @@ export const WinScreen: React.FC<Props> = ({ route }) => {
             items={compareOptions}
           />
         </View>
-        <View>
+        <View style={tailwind('mb-10')}>
           {winnersTeam.players.map(player => (
             <StatRow
+              key={player.uno}
               name={player.username}
               uno={player.uno}
               value={
@@ -176,7 +178,9 @@ export const WinScreen: React.FC<Props> = ({ route }) => {
                   ? Number(player[compare.value as keyof WinMatchPlayer])
                       .toFixed(2)
                       .toString()
-                  : Number(player[compare.value as keyof WinMatchPlayer])
+                  : Number(
+                      player[compare.value as keyof WinMatchPlayer],
+                    ).toString()
               }
               label={compare.label}
             />
