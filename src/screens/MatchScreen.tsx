@@ -10,18 +10,14 @@ import { Loader } from '../components/Loader';
 import { Error } from '../components/Error';
 
 import { CachedData, MatchData } from '../types';
-import { RootStackParamList } from '../App';
 import { MODE_KEYS } from '../constants';
 import { MainTitle } from '../components/MainTitle';
 import { Stat } from '../components/Stat';
 import { PlayerGroup } from '../components/PlayerGroup';
 
-type MatchScreenRouteProp = RouteProp<RootStackParamList, 'Match'>;
+type MatchScreenRouteProp = any;
 
-export type MatchScreenNavigationProp = StackNavigationProp<
-  RootStackParamList,
-  'Match'
->;
+export type MatchScreenNavigationProp = any;
 
 type Props = {
   navigation: MatchScreenNavigationProp;

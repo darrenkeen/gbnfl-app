@@ -106,8 +106,11 @@ export const TrophyTable: React.FC<TrophyTableProps> = ({
                 >
                   <TouchableOpacity
                     onPress={() => {
-                      navigation.navigate('Player', {
-                        uno: item.uno,
+                      navigation.navigate('PlayerTab', {
+                        screen: 'PlayerLifetime',
+                        params: {
+                          uno: item.uno,
+                        },
                       });
                     }}
                   >

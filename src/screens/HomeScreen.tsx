@@ -1,24 +1,14 @@
 import { StackNavigationProp } from '@react-navigation/stack';
 import React, { useState } from 'react';
-import {
-  View,
-  Image,
-  ScrollView,
-  RefreshControl,
-  StatusBar,
-} from 'react-native';
+import { View, Image, ScrollView, RefreshControl } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { RootStackParamList } from '../App';
 import LogoImage from '../assets/images/logo.png';
 import { TrophyTable } from '../components/TrophyTable';
 import { WeeklyFeature } from '../components/WeeklyFeature';
 import { tailwind } from '../utils/tailwind';
 
-export type HomeScreenNavigationProp = StackNavigationProp<
-  RootStackParamList,
-  'Home'
->;
+export type HomeScreenNavigationProp = any;
 
 type Props = {
   navigation: HomeScreenNavigationProp;

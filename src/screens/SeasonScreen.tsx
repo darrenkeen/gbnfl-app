@@ -21,17 +21,13 @@ import { MainTitle } from '../components/MainTitle';
 import { useFetch } from '../utils/useFetch';
 import { getColor, tailwind } from '../utils/tailwind';
 import { Button } from '../components/Button';
-import { RootStackParamList } from '../App';
 import { CachedData, WinMatchData } from '../types';
 import { WinPlayerGroup } from '../components/WinPlayerGroup';
 import { getTeamValueBasedOnKey } from '../utils/teamCalculations';
 
-type SeasonScreenRouteProp = RouteProp<RootStackParamList, 'Season'>;
+type SeasonScreenRouteProp = any;
 
-export type SeasonScreenNavigationProp = StackNavigationProp<
-  RootStackParamList,
-  'Season'
->;
+export type SeasonScreenNavigationProp = any;
 
 type Props = {
   navigation: SeasonScreenNavigationProp;

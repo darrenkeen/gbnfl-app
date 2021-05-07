@@ -1,12 +1,12 @@
 import React from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
+import { useNavigation } from '@react-navigation/core';
 
 import { formatDate } from '../utils/formatDate';
 import { MODE_KEYS, WITH_RANK_MODE } from '../constants';
 import { getColor, tailwind } from '../utils/tailwind';
-import { useNavigation } from '@react-navigation/core';
-import { PlayerScreenNavigationProp } from '../screens/PlayerScreen';
+import { PlayerScreenNavigationProp } from '../screens/Player/PlayerScreen';
 
 interface MatchProps {
   kills: number;
@@ -57,7 +57,7 @@ export const Match: React.FC<MatchProps> = ({
   return (
     <TouchableOpacity
       onPress={() => {
-        navigation.navigate('Match', { matchId, username });
+        navigation.navigate('PlayerMatch', { matchId, username });
       }}
     >
       <LinearGradient

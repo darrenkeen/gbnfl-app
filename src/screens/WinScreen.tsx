@@ -1,9 +1,6 @@
 import React, { useState } from 'react';
 import { SafeAreaView, ScrollView, Text, View } from 'react-native';
-import { StackNavigationProp } from '@react-navigation/stack';
 import Picker from 'react-native-picker-select';
-
-import { RouteProp } from '@react-navigation/native';
 
 import { Loader } from '../components/Loader';
 import { Error } from '../components/Error';
@@ -11,7 +8,6 @@ import { MainTitle } from '../components/MainTitle';
 
 import { useFetch } from '../utils/useFetch';
 import { getColor, tailwind } from '../utils/tailwind';
-import { RootStackParamList } from '../App';
 import { CachedData, WinMatchData, WinMatchPlayer } from '../types';
 import { utcFormatDate } from '../utils/formatDate';
 import { Stat } from '../components/Stat';
@@ -21,12 +17,9 @@ import {
 } from '../utils/teamCalculations';
 import { StatRow } from '../components/StatRow';
 
-type WinScreenRouteProp = RouteProp<RootStackParamList, 'Win'>;
+type WinScreenRouteProp = any;
 
-export type WinScreenNavigationProp = StackNavigationProp<
-  RootStackParamList,
-  'Win'
->;
+export type WinScreenNavigationProp = any;
 
 type Props = {
   navigation: WinScreenNavigationProp;
