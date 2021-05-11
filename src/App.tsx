@@ -51,6 +51,7 @@ export type PlayerStackParamList = {
   PlayerLatestMatches: undefined;
   PlayerMatch: {
     matchId: string;
+    username: string;
   };
 };
 

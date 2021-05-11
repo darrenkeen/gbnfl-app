@@ -1,14 +1,6 @@
 import React from 'react';
-import {
-  SafeAreaView,
-  View,
-  Text,
-  ScrollView,
-  TouchableOpacity,
-} from 'react-native';
+import { SafeAreaView, View, Text, ScrollView } from 'react-native';
 import { useNavigation } from '@react-navigation/core';
-import { StackNavigationProp } from '@react-navigation/stack';
-import { RouteProp } from '@react-navigation/native';
 import { format, addMilliseconds } from 'date-fns';
 
 import { tailwind } from '../utils/tailwind';

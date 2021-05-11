@@ -57,7 +57,7 @@ export const Match: React.FC<MatchProps> = ({
   return (
     <TouchableOpacity
       onPress={() => {
-        navigation.navigate('PlayerMatch', { matchId });
+        navigation.navigate('PlayerMatch', { matchId, username });
       }}
     >
       <LinearGradient
