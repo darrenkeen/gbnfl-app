@@ -19,7 +19,7 @@ export interface Player {
   name: string;
   sbmmUrl: string;
   platformId: string;
-  platformType: string;
+  platformType: keyof typeof PLATFORM_TYPE;
   uno: string;
 }
 

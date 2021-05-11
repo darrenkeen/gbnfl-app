@@ -1,5 +1,12 @@
 import React from 'react';
-import { SafeAreaView, View, Text, ScrollView } from 'react-native';
+import {
+  SafeAreaView,
+  View,
+  Text,
+  ScrollView,
+  TouchableOpacity,
+} from 'react-native';
+import { useNavigation } from '@react-navigation/core';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RouteProp } from '@react-navigation/native';
 import { format, addMilliseconds } from 'date-fns';
@@ -14,6 +21,7 @@ import { MODE_KEYS } from '../constants';
 import { MainTitle } from '../components/MainTitle';
 import { Stat } from '../components/Stat';
 import { PlayerGroup } from '../components/PlayerGroup';
+import { Button } from '../components/Button';
 
 type MatchScreenRouteProp = any;
 
@@ -35,6 +43,7 @@ const matchDuration = (time: number) => {
 };
 
 export const MatchScreen: React.FC<Props> = ({ route }) => {
+  const navigation = useNavigation();
   const { matchId, username } = route.params;
   const { data, status, error } = useFetch<CachedData<MatchData> | null>(
     `/data/match/${matchId}`,
@@ -67,6 +76,15 @@ export const MatchScreen: React.FC<Props> = ({ route }) => {
   return (
     <SafeAreaView style={tailwind('h-full')}>
       <ScrollView style={tailwind('pt-10')}>
+        <View style={tailwind('px-5')}>
+          <Button
+            type="outline"
+            onPress={() => {
+              navigation.goBack();
+            }}
+            title="Go back"
+          />
+        </View>
         <View style={tailwind('mb-10')}>
           <Text
             style={tailwind('text-2xl font-rubik-bold text-white text-center')}

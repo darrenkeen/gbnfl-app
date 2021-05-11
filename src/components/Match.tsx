@@ -6,7 +6,7 @@ import { useNavigation } from '@react-navigation/core';
 import { formatDate } from '../utils/formatDate';
 import { MODE_KEYS, WITH_RANK_MODE } from '../constants';
 import { getColor, tailwind } from '../utils/tailwind';
-import { PlayerScreenNavigationProp } from '../screens/Player/PlayerScreen';
+import { PlayerLifetimeScreenNavigationProp } from '../screens/Player/PlayerLifetimeScreen';
 
 interface MatchProps {
   kills: number;
@@ -52,12 +52,12 @@ export const Match: React.FC<MatchProps> = ({
   matchId,
   username,
 }) => {
-  const navigation = useNavigation<PlayerScreenNavigationProp>();
+  const navigation = useNavigation<PlayerLifetimeScreenNavigationProp>();
 
   return (
     <TouchableOpacity
       onPress={() => {
-        navigation.navigate('PlayerMatch', { matchId, username });
+        navigation.navigate('PlayerMatch', { matchId });
       }}
     >
       <LinearGradient

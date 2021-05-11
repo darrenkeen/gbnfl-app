@@ -32,8 +32,11 @@ export const StatRow: React.FC<StatRowProps> = ({
       <View style={tailwind('flex-1')}>
         <TouchableOpacity
           onPress={() => {
-            navigation.navigate('PlayerLifetime', {
-              uno,
+            navigation.navigate('PlayerTab', {
+              screen: 'PlayerLifetime',
+              params: {
+                uno,
+              },
             });
           }}
         >

@@ -1,28 +1,34 @@
 import React from 'react';
 import Axios from 'axios';
-import { createStackNavigator } from '@react-navigation/stack';
-import { NavigationContainer } from '@react-navigation/native';
+import {
+  createStackNavigator,
+  HeaderBackButton,
+} from '@react-navigation/stack';
+import {
+  NavigationContainer,
+  NavigatorScreenParams,
+} from '@react-navigation/native';
 import { createNativeStackNavigator } from 'react-native-screens/native-stack';
 import { BASE_URL } from 'react-native-dotenv';
-import { View } from 'react-native';
+import { Text, View } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 
+import { PlayerContextProvider } from './context/PlayerContext';
 import { HomeScreen } from './screens/HomeScreen';
 import { MatchScreen } from './screens/MatchScreen';
 import { SeasonScreen } from './screens/SeasonScreen';
 import { WinScreen } from './screens/WinScreen';
-import { PlayerScreen } from './screens/Player/PlayerScreen';
+import { PlayerLifetimeScreen } from './screens/Player/PlayerLifetimeScreen';
+import { PlayerWinsScreen } from './screens/Player/PlayerWinsScreen';
 import { PlayerSeasonScreen } from './screens/Player/PlayerSeasonScreen';
+import { PlayerWeeklyScreen } from './screens/Player/PlayerWeeklyScreen';
+import { PlayerMatchesScreen } from './screens/Player/PlayerMatchesScreen';
 import { getColor, tailwind } from './utils/tailwind';
 
 export type MainStackParamList = {
   Home: undefined;
   AddTrophy: undefined;
-  Match: {
-    matchId: string;
-    username: string;
-  };
   Season: {
     season: string;
   };
@@ -41,10 +47,23 @@ export type PlayerTabParamList = {
   PlayerWins: undefined;
 };
 
+export type PlayerStackParamList = {
+  PlayerLatestMatches: undefined;
+  PlayerMatch: {
+    matchId: string;
+  };
+};
+
+export type RootStackParamList = {
+  Main: undefined;
+  PlayerTab: NavigatorScreenParams<PlayerTabParamList>;
+};
+
 Axios.defaults.baseURL = BASE_URL || 'base  ';
 Axios.defaults.withCredentials = true;
 
 const MainStack = createStackNavigator<MainStackParamList>();
+const PlayerStack = createStackNavigator<PlayerStackParamList>();
 const PlayerTab = createBottomTabNavigator<PlayerTabParamList>();
 const RootStack = createNativeStackNavigator();
 
@@ -60,20 +79,15 @@ const MainStackScreen = () => (
         color: getColor('white'),
       },
       headerBackTitleStyle: {
-        color: getColor('gray-500'),
+        color: getColor('white'),
       },
-      headerTintColor: getColor('gray-500'),
+      headerTintColor: getColor('white'),
     }}
   >
     <MainStack.Screen
       name="Home"
       component={HomeScreen}
       options={{ headerShown: false }}
-    />
-    <MainStack.Screen
-      name="Match"
-      component={MatchScreen}
-      options={{ title: 'Match Stats' }}
     />
     <MainStack.Screen
       name="Season"
@@ -88,94 +102,127 @@ const MainStackScreen = () => (
   </MainStack.Navigator>
 );
 
-const PlayerTabScreen = () => (
-  <PlayerTab.Navigator
-    initialRouteName="PlayerLifetime"
-    sceneContainerStyle={{ backgroundColor: getColor('background-1000') }}
-    tabBarOptions={{
-      activeTintColor: getColor('white'),
-      inactiveTintColor: getColor('background-900'),
-      labelStyle: {
-        paddingBottom: 30,
-      },
-      style: {
+const PlayerStackScreen = () => (
+  <PlayerStack.Navigator
+    screenOptions={{
+      cardStyle: { backgroundColor: getColor('background-1000') },
+      headerStyle: {
         backgroundColor: getColor('background-1100'),
-        borderTopColor: getColor('background-900'),
-        paddingBottom: 0,
+        borderBottomColor: getColor('background-900'),
       },
+      headerTitleStyle: {
+        color: getColor('white'),
+      },
+      headerBackTitleStyle: {
+        color: getColor('white'),
+      },
+      headerTintColor: getColor('white'),
     }}
   >
-    <PlayerTab.Screen
-      name="PlayerLifetime"
-      component={PlayerScreen}
-      options={{
-        tabBarLabel: 'Lifetime',
-        tabBarIcon: ({ focused }) => (
-          <Icon
-            name="heartbeat"
-            size={20}
-            style={tailwind(focused ? 'text-white' : 'text-background-900')}
-          />
-        ),
-      }}
+    <PlayerStack.Screen
+      name="PlayerLatestMatches"
+      component={PlayerMatchesScreen}
+      options={{ headerShown: false }}
     />
-    <PlayerTab.Screen
-      name="PlayerWeekly"
-      component={PlayerSeasonScreen}
-      options={{
-        tabBarLabel: 'Weekly',
-        tabBarIcon: ({ focused }) => (
-          <Icon
-            name="calendar-week"
-            size={20}
-            style={tailwind(focused ? 'text-white' : 'text-background-900')}
-          />
-        ),
-      }}
+    <PlayerStack.Screen
+      name="PlayerMatch"
+      component={MatchScreen}
+      options={{ title: 'Match Stats', headerShown: false }}
     />
-    <PlayerTab.Screen
-      name="PlayerSeason"
-      component={PlayerSeasonScreen}
-      options={{
-        tabBarLabel: 'Season',
-        tabBarIcon: ({ focused }) => (
-          <Icon
-            name="clock"
-            size={20}
-            style={tailwind(focused ? 'text-white' : 'text-background-900')}
-          />
-        ),
+  </PlayerStack.Navigator>
+);
+
+const PlayerTabScreen = () => (
+  <PlayerContextProvider>
+    <PlayerTab.Navigator
+      initialRouteName="PlayerLifetime"
+      sceneContainerStyle={{ backgroundColor: getColor('background-1000') }}
+      tabBarOptions={{
+        activeTintColor: getColor('white'),
+        inactiveTintColor: getColor('background-900'),
+        labelStyle: {
+          paddingBottom: 30,
+        },
+        style: {
+          backgroundColor: getColor('background-1100'),
+          borderTopColor: getColor('background-900'),
+          paddingBottom: 0,
+        },
       }}
-    />
-    <PlayerTab.Screen
-      name="PlayerMatches"
-      component={PlayerSeasonScreen}
-      options={{
-        tabBarLabel: 'Matches',
-        tabBarIcon: ({ focused }) => (
-          <Icon
-            name="align-justify"
-            size={20}
-            style={tailwind(focused ? 'text-white' : 'text-background-900')}
-          />
-        ),
-      }}
-    />
-    <PlayerTab.Screen
-      name="PlayerWins"
-      component={PlayerSeasonScreen}
-      options={{
-        tabBarLabel: 'Wins',
-        tabBarIcon: ({ focused }) => (
-          <Icon
-            name="trophy"
-            size={20}
-            style={tailwind(focused ? 'text-white' : 'text-background-900')}
-          />
-        ),
-      }}
-    />
-  </PlayerTab.Navigator>
+    >
+      <PlayerTab.Screen
+        name="PlayerLifetime"
+        component={PlayerLifetimeScreen}
+        options={{
+          title: 'Lifeteime',
+          tabBarLabel: 'Lifetime',
+          tabBarIcon: ({ focused }) => (
+            <Icon
+              name="heartbeat"
+              size={20}
+              style={tailwind(focused ? 'text-white' : 'text-background-900')}
+            />
+          ),
+        }}
+      />
+      <PlayerTab.Screen
+        name="PlayerWeekly"
+        component={PlayerWeeklyScreen}
+        options={{
+          tabBarLabel: 'Weekly',
+          tabBarIcon: ({ focused }) => (
+            <Icon
+              name="calendar-week"
+              size={20}
+              style={tailwind(focused ? 'text-white' : 'text-background-900')}
+            />
+          ),
+        }}
+      />
+      <PlayerTab.Screen
+        name="PlayerSeason"
+        component={PlayerSeasonScreen}
+        options={{
+          tabBarLabel: 'Season',
+          tabBarIcon: ({ focused }) => (
+            <Icon
+              name="clock"
+              size={20}
+              style={tailwind(focused ? 'text-white' : 'text-background-900')}
+            />
+          ),
+        }}
+      />
+      <PlayerTab.Screen
+        name="PlayerMatches"
+        component={PlayerStackScreen}
+        options={{
+          tabBarLabel: 'Matches',
+          tabBarIcon: ({ focused }) => (
+            <Icon
+              name="align-justify"
+              size={20}
+              style={tailwind(focused ? 'text-white' : 'text-background-900')}
+            />
+          ),
+        }}
+      />
+      <PlayerTab.Screen
+        name="PlayerWins"
+        component={PlayerWinsScreen}
+        options={{
+          tabBarLabel: 'Wins',
+          tabBarIcon: ({ focused }) => (
+            <Icon
+              name="trophy"
+              size={20}
+              style={tailwind(focused ? 'text-white' : 'text-background-900')}
+            />
+          ),
+        }}
+      />
+    </PlayerTab.Navigator>
+  </PlayerContextProvider>
 );
 
 const App: React.FC = () => (
@@ -198,7 +245,7 @@ const App: React.FC = () => (
         <RootStack.Screen
           name="PlayerTab"
           component={PlayerTabScreen}
-          options={{ title: 'Player' }}
+          options={{ title: 'Player Stats' }}
         />
       </RootStack.Navigator>
     </NavigationContainer>
@@ -206,12 +253,3 @@ const App: React.FC = () => (
 );
 
 export default App;
-
-/*
-Icons
- Lifetime: FA heartbeat
- Weekly: FA calendar-week
- Season: FA clock
- Matches: FA align-justify
- wins: FA trophy
-*/

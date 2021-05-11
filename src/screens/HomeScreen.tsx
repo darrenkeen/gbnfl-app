@@ -1,20 +1,22 @@
-import { StackNavigationProp } from '@react-navigation/stack';
+import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
+import { CompositeNavigationProp } from '@react-navigation/native';
 import React, { useState } from 'react';
 import { View, Image, ScrollView, RefreshControl } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { NativeStackNavigationProp } from 'react-native-screens/lib/typescript/native-stack';
 
+import { PlayerTabParamList, RootStackParamList } from '../App';
 import LogoImage from '../assets/images/logo.png';
 import { TrophyTable } from '../components/TrophyTable';
 import { WeeklyFeature } from '../components/WeeklyFeature';
 import { tailwind } from '../utils/tailwind';
 
-export type HomeScreenNavigationProp = any;
+export type HomeNavigationProp = CompositeNavigationProp<
+  BottomTabNavigationProp<PlayerTabParamList>,
+  NativeStackNavigationProp<RootStackParamList>
+>;
 
-type Props = {
-  navigation: HomeScreenNavigationProp;
-};
-
-export const HomeScreen: React.FC<Props> = () => {
+export const HomeScreen: React.FC = () => {
   const [refreshing, setRefreshing] = useState(false);
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
