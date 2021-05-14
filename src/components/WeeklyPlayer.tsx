@@ -1,23 +1,25 @@
 import React, { Fragment } from 'react';
+import LinearGradient from 'react-native-linear-gradient';
+import { Text, View } from 'react-native';
 
 import { useFetch } from '../utils/useFetch';
+import { MODE_KEYS } from '../constants';
+import { getColor, tailwind } from '../utils/tailwind';
+import { CachedData, WeeklyPlayerType } from '../types';
+
 import { Stat } from './Stat';
 import { Loader } from './Loader';
 import { LastUpdated } from './LastUpdated';
 import { Countdown } from './Countdown';
 import { Error } from './Error';
-import { MODE_KEYS } from '../constants';
-import { getColor, tailwind } from '../utils/tailwind';
-import { Text, View } from 'react-native';
-import { CachedData, WeeklyPlayerType } from '../types';
-import LinearGradient from 'react-native-linear-gradient';
 
-export const WeeklyPlayer: React.FC<{ id: string; platform: string }> = ({
-  id,
-  platform,
-}) => {
+interface WeeklyPlayerProps {
+  uno: string;
+}
+
+export const WeeklyPlayer: React.FC<WeeklyPlayerProps> = ({ uno }) => {
   const { data, status, error } = useFetch<CachedData<WeeklyPlayerType> | null>(
-    `/data/weekly/${encodeURIComponent(id)}/${platform}`,
+    `/weekly/${uno}`,
     null,
   );
 
@@ -25,7 +27,7 @@ export const WeeklyPlayer: React.FC<{ id: string; platform: string }> = ({
     return <Loader />;
   }
 
-  if (error || !data) {
+  if (error || !data || data.data.modes.length < 1) {
     return <Error message={error || 'No data'} />;
   }
 
@@ -33,18 +35,21 @@ export const WeeklyPlayer: React.FC<{ id: string; platform: string }> = ({
     <View>
       <View style={tailwind('px-5')}>
         <View style={tailwind('flex-row justify-between mb-5 text-sm')}>
-          <LastUpdated cacheTimestamp={data.cacheTimestamp} />
-          <Countdown cacheTimestamp={data.cacheTimestamp} cacheMinutes={5} />
+          <LastUpdated cacheTimestamp={data.data.modes[0].updatedAt} />
+          <Countdown
+            cacheTimestamp={data.data.modes[0].updatedAt}
+            cacheMinutes={30}
+          />
         </View>
       </View>
-      {Object.keys(data.data.modes)
+      {data.data.modes
         .sort(
           (a, b) =>
-            Object.keys(MODE_KEYS).indexOf(a) -
-            Object.keys(MODE_KEYS).indexOf(b),
+            Object.keys(MODE_KEYS).indexOf(a.mode) -
+            Object.keys(MODE_KEYS).indexOf(b.mode),
         )
-        .map((key, ind) => (
-          <Fragment key={key}>
+        .map((mode, ind) => (
+          <Fragment key={mode.mode}>
             <LinearGradient
               start={{ x: 0, y: 0 }}
               end={{ x: 1, y: 0 }}
@@ -57,7 +62,7 @@ export const WeeklyPlayer: React.FC<{ id: string; platform: string }> = ({
               ]}
             >
               <Text style={tailwind('text-center text-white uppercase')}>
-                {MODE_KEYS[key as keyof typeof MODE_KEYS]}
+                {MODE_KEYS[mode.mode]}
               </Text>
             </LinearGradient>
             <View style={tailwind('px-5')}>
@@ -65,18 +70,11 @@ export const WeeklyPlayer: React.FC<{ id: string; platform: string }> = ({
                 <View style={tailwind('flex-1 mr-5')}>
                   <Stat
                     name="K/D"
-                    value={data.data.modes[
-                      key as keyof typeof MODE_KEYS
-                    ].kdRatio.toString()}
+                    value={Number(mode.kdRatio).toFixed(2).toString()}
                   />
                 </View>
                 <View style={tailwind('flex-1')}>
-                  <Stat
-                    name="Kills"
-                    value={data.data.modes[
-                      key as keyof typeof MODE_KEYS
-                    ].kills.toString()}
-                  />
+                  <Stat name="Kills" value={mode.kills.toString()} />
                 </View>
               </View>
             </View>

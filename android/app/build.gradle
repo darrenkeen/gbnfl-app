@@ -170,9 +170,9 @@ android {
         }
         release {
             storeFile file('main.keystore')
-            storePassword readLine("\nKeystore password:")
-            keyAlias readLine("\nAlias: ")
-            keyPassword readLine("\nAlias password: ")
+            storePassword 'android'
+            keyAlias 'androidreleasekey'
+            keyPassword 'android'
         }
     }
     buildTypes {

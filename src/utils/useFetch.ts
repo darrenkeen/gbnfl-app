@@ -15,6 +15,7 @@ export const useFetch = <T>(
 
   useEffect(() => {
     setStatus('fetching');
+    console.log(axios.defaults.baseURL);
     if (!pause) {
       axios
         .get(query)

@@ -1,9 +1,9 @@
 import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
 import { CompositeNavigationProp } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
 import React, { useState } from 'react';
 import { View, Image, ScrollView, RefreshControl } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { NativeStackNavigationProp } from 'react-native-screens/lib/typescript/native-stack';
 
 import { PlayerTabParamList, RootStackParamList } from '../App';
 import LogoImage from '../assets/images/logo.png';
@@ -13,7 +13,7 @@ import { tailwind } from '../utils/tailwind';
 
 export type HomeNavigationProp = CompositeNavigationProp<
   BottomTabNavigationProp<PlayerTabParamList>,
-  NativeStackNavigationProp<RootStackParamList>
+  StackNavigationProp<RootStackParamList>
 >;
 
 export const HomeScreen: React.FC = () => {

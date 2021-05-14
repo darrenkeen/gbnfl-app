@@ -29,9 +29,9 @@ export const PlayerWeeklyScreen: React.FC = () => {
           {getPlatformType(player.platformType)}
         </Text>
       </View>
-      <View style={tailwind('mb-10')}>
+      <View style={tailwind('mb-20')}>
         <MainTitle title="Weekly" />
-        <WeeklyPlayer id={player.platformId} platform={player.platformType} />
+        <WeeklyPlayer uno={player.uno} />
       </View>
     </ScrollView>
   );

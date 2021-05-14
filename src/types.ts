@@ -33,6 +33,27 @@ export interface ApprovalGame {
   }[];
 }
 
+export interface LifetimeData {
+  id: string;
+  updatedAt: string;
+  wins: number;
+  kills: number;
+  kdRatio: string;
+  downs: number;
+  topTwentyFive: number;
+  topTen: number;
+  contracts: number;
+  revives: number;
+  topFive: number;
+  score: number;
+  timePlayed: number;
+  gamesPlayed: number;
+  tokens: number;
+  scorePerMinute: string;
+  cash: number;
+  deaths: number;
+}
+
 export interface CodLifetimeData {
   level: number;
   prestige: number;
@@ -254,11 +275,43 @@ export interface WinMatchData {
 
 export type WeeklyPlayerModes = Record<
   keyof typeof MODE_KEYS,
-  { kills: number; deaths: number; kdRatio: number }
+  {
+    updatedAt: string;
+    mode: string;
+    kills: number;
+    deaths: number;
+    assists: number;
+    avgLifeTime: string;
+    headshots: number;
+    gulagDeaths: number;
+    gulagKills: number;
+    matchesPlayed: number;
+    damageDone: number;
+    damageTaken: number;
+    kdRatio: string;
+    killsPerGame: string;
+  }
 >;
 
+export interface WeeklyPlayerModeType {
+  updatedAt: string;
+  mode: keyof typeof MODE_KEYS;
+  kills: number;
+  deaths: number;
+  assists: number;
+  avgLifeTime: string;
+  headshots: number;
+  gulagDeaths: number;
+  gulagKills: number;
+  matchesPlayed: number;
+  damageDone: number;
+  damageTaken: number;
+  kdRatio: string;
+  killsPerGame: string;
+}
+
 export interface WeeklyPlayerType {
-  modes: WeeklyPlayerModes;
+  modes: WeeklyPlayerModeType[];
 }
 
 export interface LatestMatchesResponse {
