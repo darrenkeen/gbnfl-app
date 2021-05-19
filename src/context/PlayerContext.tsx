@@ -57,9 +57,16 @@ export const PlayerContextProvider: React.FC = ({ children }) => {
     '',
   );
 
+  const onSetPlayer = val => {
+    console.log('val', val);
+    setPlayer(val);
+  };
+
+  console.log(player);
+
   return (
     <PlayerStateContext.Provider
-      value={{ player, setPlayer, playerError, setPlayerError }}
+      value={{ player, setPlayer: onSetPlayer, playerError, setPlayerError }}
     >
       {children}
     </PlayerStateContext.Provider>

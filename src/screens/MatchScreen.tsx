@@ -14,6 +14,12 @@ import { MainTitle } from '../components/MainTitle';
 import { Stat } from '../components/Stat';
 import { PlayerGroup } from '../components/PlayerGroup';
 import { Button } from '../components/Button';
+import {
+  getTeamKdRatio,
+  getTeamValueBasedOnKey,
+} from '../utils/teamCalculations';
+import { useState } from 'react';
+import { PlayerStack, PlayerStackScreen } from '../stacks/PlayerStack';
 
 type MatchScreenRouteProp = any;
 
@@ -36,9 +42,10 @@ const matchDuration = (time: number) => {
 
 export const MatchScreen: React.FC<Props> = ({ route }) => {
   const navigation = useNavigation();
-  const { matchId, username } = route.params;
+  const { matchId, uno } = route.params;
+  const [showTeamCount, setShowTeamCount] = useState(5);
   const { data, status, error } = useFetch<CachedData<MatchData> | null>(
-    `/data/match/${matchId}`,
+    `/matches/id/${matchId}`,
     null,
   );
   if (status !== 'fetched') {
@@ -51,87 +58,107 @@ export const MatchScreen: React.FC<Props> = ({ route }) => {
 
   const matchData = data.data;
   const teams = matchData.teams;
-  const sortedTeamKeys = Object.entries(teams)
-    .sort(([, a], [, b]) => a.teamPlacement - b.teamPlacement)
-    .map(([k]) => k);
-  const playerTeamKey = Object.keys(teams).find(key => {
-    const playerIndex = teams[key].players.findIndex(player => {
-      return player.player.username === username;
-    });
-    return playerIndex > -1;
+  const sortedTeamsByPlacement = teams.sort(
+    (teamA, teamB) => teamA.teamPlacement - teamB.teamPlacement,
+  );
+
+  const playerTeam = teams.find(team => {
+    return team.players.some(player => player.uno === uno);
   });
 
-  if (!playerTeamKey) {
+  const onShowMoreTeams = () => {
+    setShowTeamCount(showTeamCount + 5);
+  };
+
+  if (!playerTeam) {
     return <Error message="Can't find player in match" />;
   }
 
   return (
     <SafeAreaView style={tailwind('h-full')}>
       <ScrollView style={tailwind('pt-10')}>
-        <View style={tailwind('px-5')}>
-          <Button
-            type="outline"
-            onPress={() => {
-              navigation.goBack();
-            }}
-            title="Go back"
-          />
-        </View>
         <View style={tailwind('mb-10')}>
-          <Text
-            style={tailwind('text-2xl font-rubik-bold text-white text-center')}
-          >
-            {MODE_KEYS[matchData.mode]}
-          </Text>
-          <Text
-            style={tailwind(
-              'text-sm font-rubik-light text-gray-400 text-center',
-            )}
-          >
-            {matchStartDateFormat(matchData.utcStartSeconds)}
-          </Text>
-        </View>
-        <View style={tailwind('px-5 mb-10')}>
-          <View style={tailwind('flex-row')}>
-            <View style={tailwind('flex-1 mr-5')}>
-              <Stat name="Duration" value={matchDuration(matchData.duration)} />
-            </View>
-            <View style={tailwind('flex-1 mr-5')}>
-              <Stat name="Players" value={matchData.playerCount.toString()} />
+          <View style={tailwind('px-5')}>
+            <Button
+              type="outline"
+              onPress={() => {
+                navigation.goBack();
+              }}
+              title="Go back"
+            />
+          </View>
+          <View style={tailwind('mb-10')}>
+            <Text
+              style={tailwind(
+                'text-2xl font-rubik-bold text-white text-center',
+              )}
+            >
+              {MODE_KEYS[matchData.mode]}
+            </Text>
+            <Text
+              style={tailwind(
+                'text-sm font-rubik-light text-gray-400 text-center',
+              )}
+            >
+              {matchStartDateFormat(matchData.utcStartSeconds)}
+            </Text>
+          </View>
+          <View style={tailwind('px-5 mb-10')}>
+            <View style={tailwind('flex-row')}>
+              <View style={tailwind('flex-1 mr-5')}>
+                <Stat
+                  name="Duration"
+                  value={matchDuration(
+                    matchData.utcEndSeconds * 1000 -
+                      matchData.utcStartSeconds * 1000,
+                  )}
+                />
+              </View>
+              <View style={tailwind('flex-1 mr-5')}>
+                <Stat name="Players" value={matchData.playerCount.toString()} />
+              </View>
             </View>
           </View>
-        </View>
-        <View style={tailwind('px-5 mb-10 text-center')}>
-          <Text
-            style={tailwind(
-              'text-sm font-rubik-light text-gray-400 text-center',
-            )}
-          >
-            #{matchId}
-          </Text>
-        </View>
-        <MainTitle title="Player Placement" />
-        <View style={tailwind('px-5 mt-5 mb-10')}>
-          <PlayerGroup
-            mode={matchData.mode}
-            rank={teams[playerTeamKey].teamPlacement}
-            kills={teams[playerTeamKey].kills}
-            teamKdRatio={teams[playerTeamKey].teamKdRatio}
-            players={teams[playerTeamKey].players}
-          />
-        </View>
-        <MainTitle title="Standings" />
-        <View style={tailwind('px-5 mt-5')}>
-          {sortedTeamKeys.map(key => (
+          <View style={tailwind('px-5 mb-10 text-center')}>
+            <Text
+              style={tailwind(
+                'text-sm font-rubik-light text-gray-400 text-center',
+              )}
+            >
+              #{matchData.inGameMatchId}
+            </Text>
+          </View>
+          <MainTitle title="Player Placement" />
+          <View style={tailwind('px-5 mt-5 mb-10')}>
             <PlayerGroup
-              key={key}
               mode={matchData.mode}
-              rank={teams[key].teamPlacement}
-              kills={teams[key].kills}
-              teamKdRatio={teams[key].teamKdRatio}
-              players={teams[key].players}
+              rank={playerTeam.teamPlacement}
+              kills={getTeamValueBasedOnKey(playerTeam.players, 'kills')}
+              teamKdRatio={getTeamKdRatio(playerTeam.players)}
+              players={playerTeam.players}
             />
-          ))}
+          </View>
+          <MainTitle title="Standings" />
+          <View style={tailwind('px-5 mt-5')}>
+            {sortedTeamsByPlacement.slice(0, showTeamCount).map(team => (
+              <PlayerGroup
+                key={team.id}
+                mode={matchData.mode}
+                rank={team.teamPlacement}
+                kills={getTeamValueBasedOnKey(team.players, 'kills')}
+                teamKdRatio={getTeamKdRatio(team.players)}
+                players={team.players}
+              />
+            ))}
+            {teams.length > showTeamCount && (
+              <View style={tailwind('px-4')}>
+                <Button
+                  title={`Show more (${teams.length - showTeamCount})`}
+                  onPress={onShowMoreTeams}
+                />
+              </View>
+            )}
+          </View>
         </View>
       </ScrollView>
     </SafeAreaView>

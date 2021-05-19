@@ -29,11 +29,10 @@ export const PlayerMatchesScreen: React.FC = () => {
           {getPlatformType(player.platformType)}
         </Text>
       </View>
-      <MainTitle title="Last 20 matches" />
-      <LatestMatches
-        platformId={player.platformId}
-        platformType={player.platformType}
-      />
+      <View style={tailwind('mb-10')}>
+        <MainTitle title="Matches" />
+        <LatestMatches uno={player.uno} />
+      </View>
     </ScrollView>
   );
 };

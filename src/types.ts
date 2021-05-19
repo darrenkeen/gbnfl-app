@@ -12,6 +12,8 @@ export interface Trophy {
   id: string;
   name: string;
   player: Player;
+  players?: Player[];
+  match: MatchData;
 }
 
 export interface Player {
@@ -82,6 +84,28 @@ export interface CodLifetimeData {
       };
     };
   };
+}
+
+export interface MatchDataTeam {
+  id: string;
+  teamName: string;
+  teamPlacement: number;
+  players: WinMatchPlayer[];
+}
+
+export interface MatchListResponse {
+  matches: MatchData[];
+  totalMatches: number;
+}
+
+export interface MatchData {
+  id: string;
+  inGameMatchId: string;
+  playerCount: number;
+  mode: keyof typeof MODE_KEYS;
+  utcStartSeconds: number;
+  utcEndSeconds: number;
+  teams: MatchDataTeam[];
 }
 
 export interface CodLatestData {
@@ -200,6 +224,7 @@ export interface MatchPlayer {
 export interface WinMatchPlayer {
   id: string;
   username: string;
+  clanTag?: string;
   uno: string;
   missionsComplete: number;
   missionStats: string[];
@@ -245,17 +270,6 @@ export type MatchTeam = Record<
   }
 >;
 
-export interface MatchData {
-  id: string;
-  inGameMatchId: string;
-  teams: MatchTeam;
-  playerCount: number;
-  mode: keyof typeof MODE_KEYS;
-  duration: number;
-  utcStartSeconds: number;
-  utcEndSeconds: number;
-  trophies: Trophy[];
-}
 export interface WinMatchData {
   id: string;
   inGameMatchId: string;
@@ -308,6 +322,12 @@ export interface WeeklyPlayerModeType {
   damageTaken: number;
   kdRatio: string;
   killsPerGame: string;
+  player: Player;
+}
+
+export interface WeeklyLeaderboard {
+  kdRatioMax: WeeklyPlayerModeType;
+  killsMax: WeeklyPlayerModeType;
 }
 
 export interface WeeklyPlayerType {

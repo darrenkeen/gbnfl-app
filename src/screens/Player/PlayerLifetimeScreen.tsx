@@ -1,18 +1,13 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext } from 'react';
 import { View, Text, ScrollView } from 'react-native';
 
 import { PlayerStateContext } from '../../context/PlayerContext';
 import { tailwind } from '../../utils/tailwind';
 import { MainTitle } from '../../components/MainTitle';
-import { Loader } from '../../components/Loader';
-import { CachedData, LifetimeData, Player } from '../../types';
 import { getPlatformType } from '../../utils/getPlatformType';
 import { GlobalData } from '../../components/GlobalData';
-import { Error } from '../../components/Error';
-import { useFetch } from '../../utils/useFetch';
-import { PlayerStackParamList } from '../../App';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { Header } from '../../components/Header';
+import { PlayerStackParamList } from '../../stacks/PlayerStack';
 
 type PlayerLifetimeScreenRouteProp = any;
 
@@ -22,28 +17,11 @@ type PlayerLifetimeScreenProps = {
   route: PlayerLifetimeScreenRouteProp;
 };
 
-export const PlayerLifetimeScreen: React.FC<PlayerLifetimeScreenProps> = ({
-  route,
-}) => {
-  const { player, setPlayer } = useContext(PlayerStateContext);
-  const uno = route.params.uno;
-  const { data, status, error } = useFetch<CachedData<Player> | null>(
-    `/players/uno/${uno}`,
-    null,
-  );
+export const PlayerLifetimeScreen: React.FC<PlayerLifetimeScreenProps> = () => {
+  const { player } = useContext(PlayerStateContext);
 
-  useEffect(() => {
-    if (data && data.data) {
-      setPlayer(data.data);
-    }
-  }, [data]);
-
-  if (error) {
-    return <Error message="Please try another player" />;
-  }
-
-  if (status !== 'fetched' || !player) {
-    return <Loader />;
+  if (!player) {
+    return null;
   }
 
   return (
@@ -62,7 +40,7 @@ export const PlayerLifetimeScreen: React.FC<PlayerLifetimeScreenProps> = ({
       </View>
       <View style={tailwind('mb-20')}>
         <MainTitle title="Global Stats" />
-        <GlobalData uno={uno} />
+        <GlobalData uno={player.uno} />
       </View>
     </ScrollView>
   );

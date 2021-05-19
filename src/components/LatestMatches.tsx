@@ -1,22 +1,20 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
-import { CachedData, CodLatestData, LatestMatchesResponse } from '../types';
+import { CachedData, MatchData, MatchListResponse } from '../types';
 import { useFetch } from '../utils/useFetch';
 import { Loader } from './Loader';
-import { LastUpdated } from './LastUpdated';
-import { Countdown } from './Countdown';
 import { Match } from './Match';
 import { Error } from './Error';
 import { Text, View } from 'react-native';
 import { getColor, tailwind } from '../utils/tailwind';
 import LinearGradient from 'react-native-linear-gradient';
+import { Button } from './Button';
 
 interface LatestMatchesProps {
-  platformId: string;
-  platformType: string;
+  uno: string;
 }
 
-const getGrouped = (matches: CodLatestData['matches']) => {
+const getGrouped = (matches: MatchData[]) => {
   return matches.reduce((acc, curr) => {
     const date = new Date(curr.utcStartSeconds * 1000);
     const day = date.getDate();
@@ -30,21 +28,44 @@ const getGrouped = (matches: CodLatestData['matches']) => {
     } else {
       return { ...acc, [key]: [curr] };
     }
-  }, {} as Record<string, CodLatestData['matches']>);
+  }, {} as Record<string, MatchData[]>);
 };
 
-export const LatestMatches: React.FC<LatestMatchesProps> = ({
-  platformId,
-  platformType,
-}) => {
+export const LatestMatches: React.FC<LatestMatchesProps> = ({ uno }) => {
+  const [count, setCount] = useState<number | null>(null);
+  const [startSeconds, setStartSeconds] = useState<number>(0);
+  const [matches, setMatches] = useState<MatchData[]>([]);
+
   const {
     status,
     data,
     error,
-  } = useFetch<CachedData<LatestMatchesResponse> | null>(
-    `/data/latest/${encodeURIComponent(platformId)}/${platformType}`,
+  } = useFetch<CachedData<MatchListResponse> | null>(
+    `/matches/uno/${uno}/start/${startSeconds}`,
     null,
+    false,
   );
+
+  useEffect(() => {
+    if (data && data.data.matches.length > 0) {
+      if (matches.length > 0) {
+        console.log('has matches');
+        const newMatches = data.data.matches.filter(
+          match => !matches.some(m => m.id === match.id),
+        );
+        console.log(newMatches);
+        setMatches([...matches, ...newMatches]);
+      } else {
+        console.log('no matches');
+        setMatches([...matches, ...data.data.matches]);
+      }
+
+      // Need to filter out duplicates - by ID or startseconds since already ordered maybe?
+      if (!count) {
+        setCount(data?.data.totalMatches);
+      }
+    }
+  }, [data]);
 
   if (error) {
     return (
@@ -54,19 +75,20 @@ export const LatestMatches: React.FC<LatestMatchesProps> = ({
     );
   }
 
-  if (status !== 'fetched' || !data) {
+  if (status !== 'fetched' && matches.length < 0) {
     return <Loader />;
   }
 
+  const groupedMatches = getGrouped(matches);
+
+  const onViewMore = () => {
+    const lastMatch = matches[matches.length - 1];
+    setStartSeconds(lastMatch.utcStartSeconds);
+  };
+
   return (
     <View>
-      <View style={tailwind('px-5')}>
-        <View style={tailwind('flex-row justify-between mb-5 text-sm')}>
-          <LastUpdated cacheTimestamp={data.cacheTimestamp} />
-          <Countdown cacheTimestamp={data.cacheTimestamp} cacheMinutes={5} />
-        </View>
-      </View>
-      {Object.keys(getGrouped(data.data.matches)).map(dateKey => (
+      {Object.keys(groupedMatches).map(dateKey => (
         <View key={dateKey} style={tailwind('w-full')}>
           <LinearGradient
             colors={[getColor('background-500'), getColor('background-400')]}
@@ -81,22 +103,33 @@ export const LatestMatches: React.FC<LatestMatchesProps> = ({
             </Text>
           </LinearGradient>
           <View style={tailwind('px-5')}>
-            {getGrouped(data.data.matches)[dateKey].map(match => (
+            {groupedMatches[dateKey].map(match => (
               <Match
-                key={match.matchID}
-                matchId={match.matchID}
-                kills={match.playerStats.kills}
-                damage={match.playerStats.damageDone}
+                key={match.inGameMatchId}
+                matchId={match.id}
+                kills={match.teams[0].players[0].kills}
+                damage={match.teams[0].players[0].damageDone}
                 startSeconds={match.utcStartSeconds}
-                rank={match.playerStats.teamPlacement}
-                kdRatio={match.playerStats.kdRatio}
+                gulagKills={match.teams[0].players[0].gulagKills}
+                gulagDeaths={match.teams[0].players[0].gulagDeaths}
+                rank={match.teams[0].teamPlacement}
+                kdRatio={Number(match.teams[0].players[0].kdRatio)}
                 mode={match.mode}
-                username={match.player.username}
+                uno={match.teams[0].players[0].uno}
               />
             ))}
           </View>
         </View>
       ))}
+      {count && matches.length < count && (
+        <View style={tailwind('px-4')}>
+          <Button
+            title={`View more (${count - matches.length})`}
+            onPress={onViewMore}
+            loading={status === 'fetching'}
+          />
+        </View>
+      )}
     </View>
   );
 };

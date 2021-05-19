@@ -62,7 +62,7 @@ export const useFetch = <T>(
         return unsubscribe;
       });
     }
-  }, [pause, refreshing, navigation]);
+  }, [pause, refreshing, navigation, query]);
 
   return { status, error, data };
 };
