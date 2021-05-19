@@ -6,13 +6,8 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import { StackNavigationProp } from '@react-navigation/stack';
 import LinearGradient from 'react-native-linear-gradient';
-import {
-  RouteProp,
-  useNavigation,
-  StackActions,
-} from '@react-navigation/native';
+import { useNavigation, StackActions } from '@react-navigation/native';
 
 import { Loader } from '../components/Loader';
 import { Error } from '../components/Error';
@@ -21,17 +16,13 @@ import { MainTitle } from '../components/MainTitle';
 import { useFetch } from '../utils/useFetch';
 import { getColor, tailwind } from '../utils/tailwind';
 import { Button } from '../components/Button';
-import { RootStackParamList } from '../App';
-import { CachedData, WinMatchData } from '../types';
+import { CachedData, Trophy } from '../types';
 import { WinPlayerGroup } from '../components/WinPlayerGroup';
 import { getTeamValueBasedOnKey } from '../utils/teamCalculations';
 
-type SeasonScreenRouteProp = RouteProp<RootStackParamList, 'Season'>;
+type SeasonScreenRouteProp = any;
 
-export type SeasonScreenNavigationProp = StackNavigationProp<
-  RootStackParamList,
-  'Season'
->;
+export type SeasonScreenNavigationProp = any;
 
 type Props = {
   navigation: SeasonScreenNavigationProp;
@@ -41,8 +32,8 @@ type Props = {
 export const SeasonScreen: React.FC<Props> = ({ route }) => {
   const navigation = useNavigation<SeasonScreenNavigationProp>();
   const { season } = route.params;
-  const { data, status, error } = useFetch<CachedData<WinMatchData[]> | null>(
-    `/matches/${season}`,
+  const { data, status, error } = useFetch<CachedData<Trophy[]> | null>(
+    `/trophies/match/${season}`,
     null,
   );
   const {
@@ -73,13 +64,15 @@ export const SeasonScreen: React.FC<Props> = ({ route }) => {
           </View>
         )}
         {data.data
-          .filter(dataGame => dataGame.trophies.length !== 0)
-          .sort((a, b) => (a.utcStartSeconds > b.utcStartSeconds ? -1 : 1))
-          .map(game => {
+          .sort((a, b) =>
+            a.match.utcStartSeconds > b.match.utcStartSeconds ? -1 : 1,
+          )
+          .map(trophy => {
             const date = new Date(0);
-            date.setUTCSeconds(game.utcStartSeconds);
-            const trophyUnos = game.trophies.map(trophy => trophy.player.uno);
-            const winnersTeam = game.teams.find(team => {
+            date.setUTCSeconds(trophy.match.utcStartSeconds);
+            const trophyUnos = trophy.players!.map(player => player.uno);
+
+            const winnersTeam = trophy.match.teams.find(team => {
               return team.players.find(player =>
                 trophyUnos.includes(player.uno),
               );
@@ -88,7 +81,7 @@ export const SeasonScreen: React.FC<Props> = ({ route }) => {
               return null;
             }
             return (
-              <View key={game.id}>
+              <View key={trophy.match.id}>
                 <LinearGradient
                   start={{ x: 0, y: 0 }}
                   end={{ x: 1, y: 0 }}
@@ -109,13 +102,13 @@ export const SeasonScreen: React.FC<Props> = ({ route }) => {
                 <TouchableOpacity
                   onPress={() =>
                     navigation.navigate('Win', {
-                      matchDataId: game.id,
+                      matchDataId: trophy.match.id,
                     })
                   }
                 >
                   <View style={tailwind('mt-5 px-4')}>
                     <WinPlayerGroup
-                      mode={game.mode}
+                      mode={trophy.match.mode}
                       rank={winnersTeam.teamPlacement}
                       kills={getTeamValueBasedOnKey(
                         winnersTeam.players,

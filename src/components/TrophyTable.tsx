@@ -10,7 +10,7 @@ import { generateTrophyEmoji } from '../utils/generateTrophyEmoji';
 import { Button } from './Button';
 import { PlayerTrophies } from '../types';
 import { Loader } from './Loader';
-import { HomeScreenNavigationProp } from '../screens/HomeScreen';
+import { HomeNavigationProp } from '../screens/HomeScreen';
 
 interface TrophyTableProps {
   refreshing: boolean;
@@ -21,8 +21,7 @@ export const TrophyTable: React.FC<TrophyTableProps> = ({
   refreshing,
   onEndRefresh,
 }) => {
-  const navigation = useNavigation<HomeScreenNavigationProp>();
-  // const [fetchingTrackMatches, setFetchingTrackMatches] = useState(false);
+  const navigation = useNavigation<HomeNavigationProp>();
   const { status, data, error } = useFetch<PlayerTrophies[]>(
     '/trophies/3',
     [],
@@ -106,7 +105,7 @@ export const TrophyTable: React.FC<TrophyTableProps> = ({
                 >
                   <TouchableOpacity
                     onPress={() => {
-                      navigation.navigate('Player', {
+                      navigation.navigate('PlayerStack', {
                         uno: item.uno,
                       });
                     }}

@@ -15,6 +15,7 @@ export const useFetch = <T>(
 
   useEffect(() => {
     setStatus('fetching');
+    console.log(axios.defaults.baseURL);
     if (!pause) {
       axios
         .get(query)
@@ -61,7 +62,7 @@ export const useFetch = <T>(
         return unsubscribe;
       });
     }
-  }, [pause, refreshing, navigation]);
+  }, [pause, refreshing, navigation, query]);
 
   return { status, error, data };
 };

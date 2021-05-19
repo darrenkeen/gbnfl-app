@@ -37,3 +37,5 @@ export const PLATFORM_TYPE = {
   xbl: 'Xbox',
   psn: 'PlayStation',
 };
+
+export const CURRENT_SEASON = 3;

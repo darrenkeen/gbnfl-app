@@ -4,17 +4,13 @@ import DatePicker from 'react-native-date-picker';
 
 import { PlayerAddBox } from '../components/PlayerAddBox';
 import { Player } from '../types';
-import { SafeAreaView, ScrollView, StatusBar, Text, View } from 'react-native';
+import { SafeAreaView, ScrollView, Text, View } from 'react-native';
 import { tailwind } from '../utils/tailwind';
 import { Button } from '../components/Button';
 import { getColor } from 'tailwind-rn';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { RootStackParamList } from '../App';
 
-type AddTrophyScreenNavigationProp = StackNavigationProp<
-  RootStackParamList,
-  'AddTrophy'
->;
+type AddTrophyScreenNavigationProp = any;
 interface AddTrophyScreenProps {
   navigation: AddTrophyScreenNavigationProp;
 }

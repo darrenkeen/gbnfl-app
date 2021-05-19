@@ -3,7 +3,8 @@ import { Text, View } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 
 import { MODE_KEYS, WITH_RANK_MODE } from '../constants';
-import { MatchPlayers } from '../types';
+import { WinMatchPlayer } from '../types';
+import { numberWithCommas } from '../utils/numberWithCommas';
 import { getColor, tailwind } from '../utils/tailwind';
 
 interface PlayerGroupProps {
@@ -11,7 +12,7 @@ interface PlayerGroupProps {
   rank: number;
   kills: number;
   teamKdRatio: number;
-  players: MatchPlayers[];
+  players: WinMatchPlayer[];
 }
 
 const PlayerStatItem: React.FC<{ name: string; value: string | number }> = ({
@@ -32,7 +33,7 @@ const PlayerStatItem: React.FC<{ name: string; value: string | number }> = ({
   );
 };
 
-const PlayerItem: React.FC<{ player: MatchPlayers; isLast: boolean }> = ({
+const PlayerItem: React.FC<{ player: WinMatchPlayer; isLast: boolean }> = ({
   player,
   isLast,
 }) => {
@@ -44,23 +45,23 @@ const PlayerItem: React.FC<{ player: MatchPlayers; isLast: boolean }> = ({
       ]}
     >
       <Text style={tailwind('mb-2 text-white font-rubik-bold')}>
-        {player.player.clantag && (
+        {player.clanTag && (
           <Text style={tailwind('text-white font-rubik-bold')}>
-            [{player.player.clantag.replace('^3', '').replace('^7', '')}]&nbsp;
+            [{player.clanTag.replace('^3', '').replace('^7', '')}]&nbsp;
           </Text>
         )}
-        {player.player.username}
+        {player.username}
       </Text>
       <View style={tailwind('flex-row justify-between text-white')}>
+        <PlayerStatItem value={`${player.kills}/${player.deaths}`} name="K/D" />
         <PlayerStatItem
-          value={`${player.playerStats.kills}/${player.playerStats.deaths}`}
-          name="K/D"
-        />
-        <PlayerStatItem
-          value={player.playerStats.kdRatio.toFixed(2)}
+          value={Number(player.kdRatio).toFixed(2)}
           name="KD Ratio"
         />
-        <PlayerStatItem value={player.playerStats.damageDone} name="DMG" />
+        <PlayerStatItem
+          value={numberWithCommas(player.damageDone)}
+          name="DMG"
+        />
       </View>
     </View>
   );
@@ -124,7 +125,7 @@ export const PlayerGroup: React.FC<PlayerGroupProps> = ({
       >
         {players.map((player, index) => (
           <PlayerItem
-            key={player.player.username}
+            key={player.username}
             player={player}
             isLast={index === players.length - 1}
           />

@@ -1,10 +1,11 @@
 import React from 'react';
 import { Text, View } from 'react-native';
+import { CachedData, WeeklyLeaderboard } from '../types';
 import { tailwind } from '../utils/tailwind';
+import { useFetch } from '../utils/useFetch';
 
 // import { LoaderSvg } from '../components/LoaderSvg';
 // import { Error } from '../components/Error';
-import { useWeeklyLeaderboard } from '../utils/useWeeklyLeaderboard';
 import { Loader } from './Loader';
 import { MainTitle } from './MainTitle';
 import { StatRow } from './StatRow';
@@ -12,7 +13,14 @@ import { StatRow } from './StatRow';
 interface WeeklyFeatureProps {}
 
 export const WeeklyFeature: React.FC<WeeklyFeatureProps> = ({}) => {
-  const { weeklyLeaderboard, status, error } = useWeeklyLeaderboard();
+  const {
+    status,
+    data,
+    error,
+  } = useFetch<CachedData<WeeklyLeaderboard> | null>(
+    '/weekly/leaderboard',
+    null,
+  );
   if (status !== 'fetched') {
     return <Loader />;
   }
@@ -24,24 +32,26 @@ export const WeeklyFeature: React.FC<WeeklyFeatureProps> = ({}) => {
     );
   }
 
-  if (!weeklyLeaderboard.kdRatioLeader || !weeklyLeaderboard.killsLeader) {
+  if (!data || !data.data.kdRatioMax || !data.data.killsMax) {
     return null;
   }
+
+  const weeklyLeaderboard = data.data;
 
   return (
     <View style={tailwind('mt-10 mb-10')}>
       <MainTitle title="Weekly Leaderboard" />
       <StatRow
-        uno={weeklyLeaderboard.kdRatioLeader.uno}
+        uno={weeklyLeaderboard.kdRatioMax.player.uno}
         label="KD Ratio"
-        name={weeklyLeaderboard.kdRatioLeader.name}
-        value={weeklyLeaderboard.kdRatioLeader.value}
+        name={weeklyLeaderboard.kdRatioMax.player.name}
+        value={weeklyLeaderboard.kdRatioMax.kdRatio}
       />
       <StatRow
-        uno={weeklyLeaderboard.killsLeader.uno}
+        uno={weeklyLeaderboard.killsMax.player.uno}
         label="Kills"
-        name={weeklyLeaderboard.killsLeader.name}
-        value={weeklyLeaderboard.killsLeader.value}
+        name={weeklyLeaderboard.killsMax.player.name}
+        value={weeklyLeaderboard.killsMax.kills.toString()}
       />
     </View>
   );

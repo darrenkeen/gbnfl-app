@@ -2,7 +2,6 @@ import { useNavigation } from '@react-navigation/core';
 import React from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
-import { HomeScreenNavigationProp } from '../screens/HomeScreen';
 
 import { getColor, tailwind } from '../utils/tailwind';
 
@@ -19,7 +18,7 @@ export const StatRow: React.FC<StatRowProps> = ({
   name,
   uno,
 }) => {
-  const navigation = useNavigation<HomeScreenNavigationProp>();
+  const navigation = useNavigation<any>();
   return (
     <LinearGradient
       colors={[getColor('background-500'), getColor('background-400')]}
@@ -32,8 +31,8 @@ export const StatRow: React.FC<StatRowProps> = ({
       <View style={tailwind('flex-1')}>
         <TouchableOpacity
           onPress={() => {
-            navigation.navigate('Player', {
-              uno,
+            navigation.navigate('PlayerStack', {
+              uno: uno,
             });
           }}
         >

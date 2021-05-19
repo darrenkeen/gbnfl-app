@@ -170,9 +170,9 @@ android {
         }
         release {
             storeFile file('main.keystore')
-            storePassword readLine("\nKeystore password:")
-            keyAlias readLine("\nAlias: ")
-            keyPassword readLine("\nAlias password: ")
+            storePassword 'android'
+            keyAlias 'androidreleasekey'
+            keyPassword 'android'
         }
     }
     buildTypes {
@@ -242,3 +242,4 @@ task copyDownloadableDepsToLibs(type: Copy) {
 }
 
 apply from: file("../../node_modules/@react-native-community/cli-platform-android/native_modules.gradle"); applyNativeModulesAppBuildGradle(project)
+apply from: "../../node_modules/react-native-vector-icons/fonts.gradle"
