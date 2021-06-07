@@ -12,7 +12,10 @@ import { CURRENT_SEASON } from '../../constants';
 import { Loader } from '../../components/Loader';
 import LinearGradient from 'react-native-linear-gradient';
 import { WinPlayerGroup } from '../../components/WinPlayerGroup';
-import { getTeamValueBasedOnKey } from '../../utils/teamCalculations';
+import {
+  getTeamKdRatio,
+  getTeamValueBasedOnKey,
+} from '../../utils/teamCalculations';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { PlayerStackParamList } from '../../stacks/PlayerStack';
@@ -117,10 +120,7 @@ export const PlayerWinsScreen: React.FC = () => {
                         winnersTeam.players,
                         'kills',
                       )}
-                      teamKdRatio={getTeamValueBasedOnKey(
-                        winnersTeam.players,
-                        'kills',
-                      )}
+                      teamKdRatio={getTeamKdRatio(winnersTeam.players)}
                       players={winnersTeam.players}
                     />
                   </View>

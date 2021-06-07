@@ -38,7 +38,7 @@ export const GlobalData: React.FC<GlobalDataProps> = ({ uno }) => {
     <View style={tailwind('px-5')}>
       <View style={tailwind('flex-row justify-between mb-5 text-sm')}>
         <LastUpdated cacheTimestamp={lifetimeData.updatedAt} />
-        <Countdown cacheTimestamp={lifetimeData.updatedAt} cacheMinutes={30} />
+        {/* <Countdown cacheTimestamp={lifetimeData.updatedAt} cacheMinutes={30} /> */}
       </View>
       <View style={tailwind('flex-row mb-5')}>
         <View style={tailwind('flex-1 mr-5')}>
