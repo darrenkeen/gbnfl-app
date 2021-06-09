@@ -1,10 +1,6 @@
 import React from 'react';
 import Axios from 'axios';
-import { createStackNavigator } from '@react-navigation/stack';
-import {
-  NavigationContainer,
-  NavigatorScreenParams,
-} from '@react-navigation/native';
+import { NavigationContainer } from '@react-navigation/native';
 import { BASE_URL } from 'react-native-dotenv';
 import { View } from 'react-native';
 

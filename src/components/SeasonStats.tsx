@@ -1,32 +1,30 @@
 import React, { Fragment } from 'react';
-import LinearGradient from 'react-native-linear-gradient';
 import { Text, View } from 'react-native';
 
 import { useFetch } from '../utils/useFetch';
-import { MODE_KEYS } from '../constants';
+import { CURRENT_SEASON, MODE_KEYS } from '../constants';
 import { getColor, tailwind } from '../utils/tailwind';
-import { CachedData, LastUpdatedData, WeeklyPlayerType } from '../types';
+import { LastUpdatedData, SeasonStatsResponse } from '../types';
 
 import { Stat } from './Stat';
 import { Loader } from './Loader';
+import { Error } from './Error';
+import LinearGradient from 'react-native-linear-gradient';
+import { getGulagWinPercent } from '../utils/getGulagWinPercent';
 import { LastUpdated } from './LastUpdated';
 import { Countdown } from './Countdown';
-import { Error } from './Error';
-import { formatDate } from '../utils/formatDate';
-import { numberWithCommas } from '../utils/numberWithCommas';
-import { getGulagWinPercent } from '../utils/getGulagWinPercent';
 
 interface WeeklyPlayerProps {
   uno: string;
 }
 
-export const WeeklyPlayer: React.FC<WeeklyPlayerProps> = ({ uno }) => {
+export const SeasonStats: React.FC<WeeklyPlayerProps> = ({ uno }) => {
   const {
     data,
     status,
     error,
-  } = useFetch<LastUpdatedData<WeeklyPlayerType> | null>(
-    `/weekly/${uno}`,
+  } = useFetch<LastUpdatedData<SeasonStatsResponse> | null>(
+    `/season/${uno}/${CURRENT_SEASON}`,
     null,
   );
 
@@ -34,9 +32,11 @@ export const WeeklyPlayer: React.FC<WeeklyPlayerProps> = ({ uno }) => {
     return <Loader />;
   }
 
-  if (error || !data || data.data.modes.length < 1) {
+  if (error || !data) {
     return <Error message={error || 'No data'} />;
   }
+
+  const seasonData = data.data;
 
   return (
     <View>
@@ -46,14 +46,14 @@ export const WeeklyPlayer: React.FC<WeeklyPlayerProps> = ({ uno }) => {
           <Countdown cacheTimestamp={data.lastUpdated} cacheMinutes={30} />
         </View>
       </View>
-      {data.data.modes
+      {seasonData
         .sort(
           (a, b) =>
             Object.keys(MODE_KEYS).indexOf(a.mode) -
             Object.keys(MODE_KEYS).indexOf(b.mode),
         )
-        .map((mode, ind) => (
-          <Fragment key={mode.mode}>
+        .map((gameMode, ind) => (
+          <Fragment key={gameMode.mode}>
             <LinearGradient
               start={{ x: 0, y: 0 }}
               end={{ x: 1, y: 0 }}
@@ -66,58 +66,41 @@ export const WeeklyPlayer: React.FC<WeeklyPlayerProps> = ({ uno }) => {
               ]}
             >
               <Text style={tailwind('text-center text-white uppercase')}>
-                {MODE_KEYS[mode.mode]} - {mode.matchesPlayed} games
+                {MODE_KEYS[gameMode.mode]} - {gameMode.gamesPlayed} games
               </Text>
             </LinearGradient>
             <View style={tailwind('px-5')}>
               <View style={tailwind('flex-row mb-5')}>
                 <View style={tailwind('flex-1 mr-5')}>
+                  <Stat name="Wins" value={gameMode.wins.toString()} />
+                </View>
+                <View style={tailwind('flex-1 ')}>
                   <Stat
                     name="K/D ratio"
-                    value={Number(mode.kdRatio).toFixed(2)}
-                  />
-                </View>
-                <View style={tailwind('flex-1')}>
-                  <Stat
-                    name="Kills per game"
-                    value={Number(mode.killsPerGame).toFixed(2)}
+                    value={Number(gameMode.kdRatio).toFixed(2)}
                   />
                 </View>
               </View>
               <View style={tailwind('flex-row mb-5')}>
                 <View style={tailwind('flex-1 mr-5')}>
-                  <Stat name="Kills" value={mode.kills.toString()} />
+                  <Stat name="Kills" value={gameMode.kills.toString()} />
                 </View>
                 <View style={tailwind('flex-1')}>
-                  <Stat name="Deaths" value={mode.deaths.toString()} />
+                  <Stat name="Deaths" value={gameMode.deaths.toString()} />
                 </View>
               </View>
               <View style={tailwind('flex-row mb-5')}>
-                <View style={tailwind('flex-1 mr-5')}>
-                  <Stat name="DMG" value={numberWithCommas(mode.damageDone)} />
-                </View>
-                <View style={tailwind('flex-1')}>
-                  <Stat
-                    name="DMG Taken"
-                    value={numberWithCommas(mode.damageTaken)}
-                  />
-                </View>
-              </View>
-              <View style={tailwind('flex-row')}>
                 <View style={tailwind('flex-1 mr-5')}>
                   <Stat
                     name="Gulag W%"
                     value={`${getGulagWinPercent(
-                      mode.gulagKills,
-                      mode.gulagDeaths,
+                      gameMode.gulagWins,
+                      gameMode.gulagLosses,
                     ).toFixed(2)}%`}
                   />
                 </View>
                 <View style={tailwind('flex-1')}>
-                  <Stat
-                    name="AVG Life"
-                    value={formatDate(Number(mode.avgLifeTime) * 1000)}
-                  />
+                  <Stat name="Assists" value={gameMode.assists.toString()} />
                 </View>
               </View>
             </View>

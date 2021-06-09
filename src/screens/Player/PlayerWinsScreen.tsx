@@ -7,7 +7,7 @@ import { PlayerStateContext } from '../../context/PlayerContext';
 import { getColor, tailwind } from '../../utils/tailwind';
 import { getPlatformType } from '../../utils/getPlatformType';
 import { useFetch } from '../../utils/useFetch';
-import { CachedData, Trophy } from '../../types';
+import { CachedData, LastUpdatedData, Trophy } from '../../types';
 import { CURRENT_SEASON } from '../../constants';
 import { Loader } from '../../components/Loader';
 import LinearGradient from 'react-native-linear-gradient';
@@ -19,13 +19,15 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { PlayerStackParamList } from '../../stacks/PlayerStack';
+import { LastUpdated } from '../../components/LastUpdated';
+import { Countdown } from '../../components/Countdown';
 
 export type PlayerWinsScreenNavigationProp = StackNavigationProp<PlayerStackParamList>;
 
 export const PlayerWinsScreen: React.FC = () => {
   const navigation = useNavigation<PlayerWinsScreenNavigationProp>();
   const { player } = useContext(PlayerStateContext);
-  const { data, status, error } = useFetch<CachedData<Trophy[]> | null>(
+  const { data, status, error } = useFetch<LastUpdatedData<Trophy[]> | null>(
     `/trophies/match/${player!.uno}/${CURRENT_SEASON}`,
     null,
     !player,
@@ -58,7 +60,13 @@ export const PlayerWinsScreen: React.FC = () => {
         </Text>
       </View>
       <MainTitle title="Wins" />
-      <View style={tailwind('px-5 mt-5')}>
+      <View style={tailwind('px-5')}>
+        <View style={tailwind('flex-row justify-between mb-5 text-sm')}>
+          <LastUpdated cacheTimestamp={data.lastUpdated} />
+          <Countdown cacheTimestamp={data.lastUpdated} cacheMinutes={30} />
+        </View>
+      </View>
+      <View style={tailwind('px-5')}>
         {data.data.length < 1 && (
           <View style={tailwind('my-5')}>
             <Text style={tailwind('text-lg text-center text-white')}>
@@ -67,7 +75,7 @@ export const PlayerWinsScreen: React.FC = () => {
           </View>
         )}
       </View>
-      <View style={tailwind('mt-5 mb-10')}>
+      <View style={tailwind('mb-10')}>
         {data.data
           .sort((a, b) =>
             a.match.utcStartSeconds > b.match.utcStartSeconds ? -1 : 1,

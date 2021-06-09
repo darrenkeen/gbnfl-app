@@ -2,6 +2,7 @@ import React, { useContext } from 'react';
 import { View, Text, ScrollView } from 'react-native';
 import { MainTitle } from '../../components/MainTitle';
 import { Error } from '../../components/Error';
+import { SeasonStats } from '../../components/SeasonStats';
 import { PlayerStateContext } from '../../context/PlayerContext';
 import { getPlatformType } from '../../utils/getPlatformType';
 
@@ -27,11 +28,9 @@ export const PlayerSeasonScreen: React.FC = () => {
           {getPlatformType(player.platformType)}
         </Text>
       </View>
-      <MainTitle title="Season Stats" />
-      <View style={tailwind('px-5 mt-5')}>
-        <Text style={tailwind('text-center text-white font-rubik text-base')}>
-          Coming soon
-        </Text>
+      <View style={tailwind('mb-20')}>
+        <MainTitle title="Season Stats" />
+        <SeasonStats uno={player.uno} />
       </View>
     </ScrollView>
   );

@@ -147,6 +147,11 @@ export interface CachedData<T> {
   data: T;
 }
 
+export interface LastUpdatedData<T> {
+  lastUpdated: string;
+  data: T;
+}
+
 export interface MatchPlayer {
   utcStartSeconds: number;
   utcEndSeconds: number;
@@ -337,3 +342,16 @@ export interface WeeklyPlayerType {
 export interface LatestMatchesResponse {
   matches: CodLatestMatch[];
 }
+
+export interface SeasonStatsResponse {
+  mode: keyof typeof MODE_KEYS;
+  gamesPlayed: number;
+  wins: number;
+  kills: number;
+  deaths: number;
+  kdRatio: number;
+  assists: number;
+  gulagWins: number;
+  gulagLosses: number;
+}
+[];

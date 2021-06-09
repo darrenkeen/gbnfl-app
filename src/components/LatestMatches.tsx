@@ -1,6 +1,11 @@
 import React, { useEffect, useState } from 'react';
 
-import { CachedData, MatchData, MatchListResponse } from '../types';
+import {
+  CachedData,
+  LastUpdatedData,
+  MatchData,
+  MatchListResponse,
+} from '../types';
 import { useFetch } from '../utils/useFetch';
 import { Loader } from './Loader';
 import { Match } from './Match';
@@ -9,6 +14,8 @@ import { Text, View } from 'react-native';
 import { getColor, tailwind } from '../utils/tailwind';
 import LinearGradient from 'react-native-linear-gradient';
 import { Button } from './Button';
+import { LastUpdated } from './LastUpdated';
+import { Countdown } from './Countdown';
 
 interface LatestMatchesProps {
   uno: string;
@@ -40,7 +47,7 @@ export const LatestMatches: React.FC<LatestMatchesProps> = ({ uno }) => {
     status,
     data,
     error,
-  } = useFetch<CachedData<MatchListResponse> | null>(
+  } = useFetch<LastUpdatedData<MatchListResponse> | null>(
     `/matches/uno/${uno}/start/${startSeconds}`,
     null,
     false,
@@ -49,14 +56,11 @@ export const LatestMatches: React.FC<LatestMatchesProps> = ({ uno }) => {
   useEffect(() => {
     if (data && data.data.matches.length > 0) {
       if (matches.length > 0) {
-        console.log('has matches');
         const newMatches = data.data.matches.filter(
           match => !matches.some(m => m.id === match.id),
         );
-        console.log(newMatches);
         setMatches([...matches, ...newMatches]);
       } else {
-        console.log('no matches');
         setMatches([...matches, ...data.data.matches]);
       }
 
@@ -88,6 +92,14 @@ export const LatestMatches: React.FC<LatestMatchesProps> = ({ uno }) => {
 
   return (
     <View>
+      {data && (
+        <View style={tailwind('px-5')}>
+          <View style={tailwind('flex-row justify-between mb-5 text-sm')}>
+            <LastUpdated cacheTimestamp={data.lastUpdated} />
+            <Countdown cacheTimestamp={data.lastUpdated} cacheMinutes={30} />
+          </View>
+        </View>
+      )}
       {Object.keys(groupedMatches).map(dateKey => (
         <View key={dateKey} style={tailwind('w-full')}>
           <LinearGradient

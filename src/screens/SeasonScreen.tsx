@@ -16,9 +16,11 @@ import { MainTitle } from '../components/MainTitle';
 import { useFetch } from '../utils/useFetch';
 import { getColor, tailwind } from '../utils/tailwind';
 import { Button } from '../components/Button';
-import { CachedData, Trophy } from '../types';
+import { CachedData, LastUpdatedData, Trophy } from '../types';
 import { WinPlayerGroup } from '../components/WinPlayerGroup';
 import { getTeamValueBasedOnKey } from '../utils/teamCalculations';
+import { Countdown } from '../components/Countdown';
+import { LastUpdated } from '../components/LastUpdated';
 
 type SeasonScreenRouteProp = any;
 
@@ -32,7 +34,7 @@ type Props = {
 export const SeasonScreen: React.FC<Props> = ({ route }) => {
   const navigation = useNavigation<SeasonScreenNavigationProp>();
   const { season } = route.params;
-  const { data, status, error } = useFetch<CachedData<Trophy[]> | null>(
+  const { data, status, error } = useFetch<LastUpdatedData<Trophy[]> | null>(
     `/trophies/match/${season}`,
     null,
   );
@@ -55,6 +57,12 @@ export const SeasonScreen: React.FC<Props> = ({ route }) => {
       <ScrollView style={tailwind('pt-10')}>
         <View>
           <MainTitle title={`Season ${season}`} />
+        </View>
+        <View style={tailwind('px-5')}>
+          <View style={tailwind('flex-row justify-between mb-5 text-sm')}>
+            <LastUpdated cacheTimestamp={data.lastUpdated} />
+            <Countdown cacheTimestamp={data.lastUpdated} cacheMinutes={30} />
+          </View>
         </View>
         {data.data.length < 1 && (
           <View style={tailwind('my-5')}>

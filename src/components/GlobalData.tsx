@@ -8,17 +8,18 @@ import { Stat } from './Stat';
 import { Loader } from './Loader';
 import { View } from 'react-native';
 import { tailwind } from '../utils/tailwind';
-import { CachedData, LifetimeData } from '../types';
+import { CachedData, LastUpdatedData, LifetimeData } from '../types';
 
 interface GlobalDataProps {
   uno: string;
 }
 
 export const GlobalData: React.FC<GlobalDataProps> = ({ uno }) => {
-  const { status, data, error } = useFetch<CachedData<LifetimeData> | null>(
-    `/lifetime/${uno}`,
-    null,
-  );
+  const {
+    status,
+    data,
+    error,
+  } = useFetch<LastUpdatedData<LifetimeData> | null>(`/lifetime/${uno}`, null);
 
   if (error || (status === 'fetched' && !data)) {
     return (
@@ -37,8 +38,8 @@ export const GlobalData: React.FC<GlobalDataProps> = ({ uno }) => {
   return (
     <View style={tailwind('px-5')}>
       <View style={tailwind('flex-row justify-between mb-5 text-sm')}>
-        <LastUpdated cacheTimestamp={lifetimeData.updatedAt} />
-        {/* <Countdown cacheTimestamp={lifetimeData.updatedAt} cacheMinutes={30} /> */}
+        <LastUpdated cacheTimestamp={data!.lastUpdated} />
+        <Countdown cacheTimestamp={data!.lastUpdated} cacheMinutes={30} />
       </View>
       <View style={tailwind('flex-row mb-5')}>
         <View style={tailwind('flex-1 mr-5')}>

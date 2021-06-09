@@ -8,9 +8,12 @@ import { getColor, tailwind } from '../utils/tailwind';
 import { generateTrophyEmoji } from '../utils/generateTrophyEmoji';
 
 import { Button } from './Button';
-import { PlayerTrophies } from '../types';
+import { LastUpdatedData, PlayerTrophies } from '../types';
 import { Loader } from './Loader';
 import { HomeNavigationProp } from '../screens/HomeScreen';
+import { CURRENT_SEASON } from '../constants';
+import { LastUpdated } from './LastUpdated';
+import { Countdown } from './Countdown';
 
 interface TrophyTableProps {
   refreshing: boolean;
@@ -22,30 +25,14 @@ export const TrophyTable: React.FC<TrophyTableProps> = ({
   onEndRefresh,
 }) => {
   const navigation = useNavigation<HomeNavigationProp>();
-  const { status, data, error } = useFetch<PlayerTrophies[]>(
-    '/trophies/3',
-    [],
+  const { status, data, error } = useFetch<LastUpdatedData<PlayerTrophies[]>>(
+    `/trophies/${CURRENT_SEASON}`,
+    { lastUpdated: new Date().toDateString(), data: [] },
     false,
     refreshing,
     onEndRefresh,
     navigation,
   );
-
-  // const trackMatches = () => {
-  //   setFetchingTrackMatches(true);
-  //   axios
-  //     .get('/matches/track-match')
-  //     .then((res: any) => {
-  //       if (res.status !== 204) {
-  //         console.error({ error: 'Not 204', message: res });
-  //       }
-  //       setFetchingTrackMatches(false);
-  //     })
-  //     .catch((e: any) => {
-  //       console.error(e);
-  //       setFetchingTrackMatches(false);
-  //     });
-  // };
 
   if (status !== 'fetched') {
     return <Loader />;
@@ -64,7 +51,7 @@ export const TrophyTable: React.FC<TrophyTableProps> = ({
       colors={[getColor('background-1000'), getColor('background-300')]}
       style={tailwind('rounded-b-3xl bg-background-300')}
     >
-      <View style={tailwind('justify-center px-5 mb-10 mt-10')}>
+      <View style={tailwind('justify-center px-5 mb-5 mt-10')}>
         <View style={tailwind('w-full')}>
           <View
             style={tailwind(
@@ -88,7 +75,7 @@ export const TrophyTable: React.FC<TrophyTableProps> = ({
             </View>
           </View>
           <View>
-            {data.map((item, index) => (
+            {data.data.map((item, index) => (
               <View key={item.name} style={tailwind('flex-row')}>
                 <LinearGradient
                   colors={[
@@ -132,24 +119,17 @@ export const TrophyTable: React.FC<TrophyTableProps> = ({
           </View>
         </View>
       </View>
-      {/* <View style={tailwind('justify-center px-5')}>
-        <Button
-          title="Check for trophies"
-          disabled={fetchingTrackMatches}
-          loading={fetchingTrackMatches}
-          onPress={() => {
-            if (!fetchingTrackMatches) {
-              trackMatches();
-            }
-          }}
-        />
-      </View> */}
+      <View style={tailwind('px-5')}>
+        <View style={tailwind('flex-row justify-center mb-5 text-sm')}>
+          <Countdown cacheTimestamp={data.lastUpdated} cacheMinutes={30} />
+        </View>
+      </View>
       <View style={tailwind('justify-center px-5')}>
         <Button
           title="View wins"
           onPress={() =>
             navigation.navigate('Season', {
-              season: '3',
+              season: CURRENT_SEASON,
             })
           }
         />

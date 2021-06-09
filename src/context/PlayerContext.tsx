@@ -58,11 +58,8 @@ export const PlayerContextProvider: React.FC = ({ children }) => {
   );
 
   const onSetPlayer = val => {
-    console.log('val', val);
     setPlayer(val);
   };
-
-  console.log(player);
 
   return (
     <PlayerStateContext.Provider
