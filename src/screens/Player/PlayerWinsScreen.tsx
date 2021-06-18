@@ -59,7 +59,7 @@ export const PlayerWinsScreen: React.FC = () => {
           {getPlatformType(player.platformType)}
         </Text>
       </View>
-      <MainTitle title="Wins" />
+      <MainTitle title="Season Wins" />
       <View style={tailwind('px-5')}>
         <View style={tailwind('flex-row justify-between mb-5 text-sm')}>
           <LastUpdated cacheTimestamp={data.lastUpdated} />
@@ -70,7 +70,7 @@ export const PlayerWinsScreen: React.FC = () => {
         {data.data.length < 1 && (
           <View style={tailwind('my-5')}>
             <Text style={tailwind('text-lg text-center text-white')}>
-              No wins so far...
+              No wins this season so far...
             </Text>
           </View>
         )}
