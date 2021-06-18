@@ -136,28 +136,26 @@ export const SeasonScreen: React.FC<Props> = ({ route }) => {
         <View style={tailwind('mt-10')}>
           <MainTitle title="Other seasons" />
           <View style={tailwind('flex-row px-5 mb-10')}>
-            {Object.keys(seasonData.data)
-              .filter(k => k !== season)
-              .map((key, index) => {
-                return (
-                  <View key={key} style={tailwind(index === 0 ? 'mr-5' : '')}>
-                    <View>
-                      <Button
-                        key={key}
-                        type="full"
-                        title={`Season ${key}`}
-                        onPress={() => {
-                          if (key !== season) {
-                            navigation.dispatch(
-                              StackActions.replace('Season', { season: key }),
-                            );
-                          }
-                        }}
-                      />
-                    </View>
+            {Object.keys(seasonData.data).map((key, index) => {
+              return (
+                <View key={key} style={tailwind(index !== 0 ? 'ml-5' : '')}>
+                  <View>
+                    <Button
+                      key={key}
+                      type="full"
+                      title={`Season ${key}`}
+                      onPress={() => {
+                        if (key !== season) {
+                          navigation.dispatch(
+                            StackActions.replace('Season', { season: key }),
+                          );
+                        }
+                      }}
+                    />
                   </View>
-                );
-              })}
+                </View>
+              );
+            })}
           </View>
         </View>
       </ScrollView>

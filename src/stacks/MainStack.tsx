@@ -24,7 +24,6 @@ export const MainStackScreen = () => (
       cardStyle: { backgroundColor: getColor('background-1000') },
       headerStyle: {
         backgroundColor: getColor('background-1200'),
-        borderBottomColor: getColor('background-900'),
       },
       headerTitleStyle: {
         color: getColor('white'),
@@ -40,7 +39,7 @@ export const MainStackScreen = () => (
       component={HomeScreen}
       options={{ headerShown: false }}
     />
-    <MainStack.Screen
+    {/* <MainStack.Screen
       name="Season"
       component={SeasonScreen}
       options={{ title: 'Season Wins' }}
@@ -49,6 +48,6 @@ export const MainStackScreen = () => (
       name="Win"
       component={WinScreen}
       options={{ title: 'Win stats' }}
-    />
+    /> */}
   </MainStack.Navigator>
 );
