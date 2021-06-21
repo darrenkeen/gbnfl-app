@@ -10,6 +10,7 @@ import { useFetch } from '../utils/useFetch';
 import { Error } from '../components/Error';
 import { PlayerTabParamList, PlayerTabScreen } from './PlayerTab';
 import { Loader } from '../components/Loader';
+import { HeaderRight } from '../components/HeaderRight';
 
 export type PlayerStackParamList = {
   PlayerTabs: NavigatorScreenParams<PlayerTabParamList>;
@@ -28,7 +29,7 @@ export const PlayerStack = createStackNavigator<PlayerStackParamList>();
 export const PlayerStackScreen: React.FC<PlayerStackScreenProps> = ({
   route,
 }) => {
-  const { player, setPlayer, playerError } = useContext(PlayerStateContext);
+  const { player, setPlayer } = useContext(PlayerStateContext);
   const uno = route.params.uno;
   const { data, status, error } = useFetch<CachedData<Player> | null>(
     `/players/uno/${uno}`,
@@ -53,29 +54,28 @@ export const PlayerStackScreen: React.FC<PlayerStackScreenProps> = ({
       screenOptions={{
         cardStyle: { backgroundColor: getColor('background-1000') },
         headerStyle: {
-          backgroundColor: getColor('background-1100'),
-          borderBottomColor: getColor('background-900'),
-        },
-        headerTitleStyle: {
-          borderTopWidth: 10,
-          borderTopColor: 'red',
-          color: getColor('white'),
+          backgroundColor: getColor('background-1200'),
+          shadowOpacity: 1,
+          shadowColor: getColor('background-1200'),
+          shadowRadius: 5,
         },
         headerBackTitleStyle: {
           color: getColor('white'),
+          fontSize: 14,
         },
         headerTintColor: getColor('white'),
+        headerRight: () => <HeaderRight />,
       }}
     >
       <PlayerStack.Screen
         name="PlayerTabs"
         component={PlayerTabScreen}
-        options={{ headerShown: false }}
+        options={{ title: `${player?.name}` }}
       />
       <PlayerStack.Screen
         name="PlayerMatch"
         component={MatchScreen}
-        options={{ title: 'Match Stats', headerShown: false }}
+        options={{ title: 'Match Stats' }}
       />
     </PlayerStack.Navigator>
   );

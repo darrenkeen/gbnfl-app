@@ -2,15 +2,13 @@ import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import { getColor } from '../utils/tailwind';
 import { HomeScreen } from '../screens/HomeScreen';
-import { SeasonScreen } from '../screens/SeasonScreen';
-import { WinScreen } from '../screens/WinScreen';
+import { ProfileScreen } from '../screens/ProfileScreen';
+import { HeaderRight } from '../components/HeaderRight';
 
 export type MainStackParamList = {
   Home: undefined;
   AddTrophy: undefined;
-  Season: {
-    season: string;
-  };
+  Profile: undefined;
   Win: {
     matchDataId: string;
   };
@@ -24,6 +22,9 @@ export const MainStackScreen = () => (
       cardStyle: { backgroundColor: getColor('background-1000') },
       headerStyle: {
         backgroundColor: getColor('background-1200'),
+        shadowOpacity: 1,
+        shadowColor: getColor('background-1200'),
+        shadowRadius: 5,
       },
       headerTitleStyle: {
         color: getColor('white'),
@@ -32,18 +33,15 @@ export const MainStackScreen = () => (
         color: getColor('white'),
       },
       headerTintColor: getColor('white'),
+      headerRight: () => <HeaderRight />,
     }}
   >
     <MainStack.Screen
       name="Home"
       component={HomeScreen}
-      options={{ headerShown: false }}
+      options={{ headerTitle: '' }}
     />
-    {/* <MainStack.Screen
-      name="Season"
-      component={SeasonScreen}
-      options={{ title: 'Season Wins' }}
-    />
+    {/*
     <MainStack.Screen
       name="Win"
       component={WinScreen}

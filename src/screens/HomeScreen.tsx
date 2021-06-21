@@ -6,7 +6,6 @@ import { View, Image, ScrollView, RefreshControl } from 'react-native';
 
 import LogoImage from '../assets/images/logo.png';
 import { TrophyTable } from '../components/TrophyTable';
-import { WeeklyFeature } from '../components/WeeklyFeature';
 import { PlayerTabParamList } from '../stacks/PlayerTab';
 import { RootStackParamList } from '../stacks/RootStack';
 import { tailwind } from '../utils/tailwind';
@@ -41,7 +40,6 @@ export const HomeScreen: React.FC = () => {
         />
       </View>
       <TrophyTable refreshing={refreshing} onEndRefresh={onEndRefresh} />
-      <WeeklyFeature />
     </ScrollView>
   );
 };

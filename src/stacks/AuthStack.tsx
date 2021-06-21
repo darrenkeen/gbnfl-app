@@ -2,7 +2,6 @@ import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import { getColor } from '../utils/tailwind';
 import { LoginScreen } from '../screens/LoginScreen';
-import { PlayerContextProvider } from '../context/PlayerContext';
 
 export type AuthStackParamList = {
   Login: undefined;

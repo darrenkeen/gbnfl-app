@@ -355,3 +355,12 @@ export interface SeasonStatsResponse {
   gulagLosses: number;
 }
 [];
+
+export interface User {
+  id: string;
+  firstName: string;
+  lastName: string;
+  player: Player;
+  email: string;
+  updatedAt: string;
+}

@@ -5,10 +5,12 @@ import { AuthStackComponent } from '../stacks/AuthStack';
 import { SplashScreen } from '../screens/SplashScreen';
 
 export const NavigationControl: React.FC = () => {
-  const { userToken, isLoading } = useContext(AuthContext);
+  const {
+    state: { user, isLoading },
+  } = useContext(AuthContext);
   return isLoading ? (
     <SplashScreen />
-  ) : userToken ? (
+  ) : user ? (
     <RootStackComponent />
   ) : (
     <AuthStackComponent />

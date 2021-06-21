@@ -1,11 +1,12 @@
 import React, { useState, useContext } from 'react';
-import { View, Image, Button } from 'react-native';
+import { View, Image } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Input } from 'react-native-elements';
 
 import { AuthContext } from '../context/AuthContext';
 import LogoImage from '../assets/images/logo.png';
 import { tailwind } from '../utils/tailwind';
+import { Button } from '../components/Button';
 
 export const LoginScreen: React.FC = () => {
   const [username, setUsername] = useState('');
@@ -21,14 +22,16 @@ export const LoginScreen: React.FC = () => {
           resizeMode="contain"
         />
       </View>
-      <View>
+      <View style={tailwind('px-5 mt-10')}>
         <Input
+          style={tailwind('text-white')}
           placeholder="Username"
           value={username}
           onChangeText={setUsername}
           autoCapitalize="none"
         />
         <Input
+          style={tailwind('text-white')}
           placeholder="Password"
           value={password}
           onChangeText={setPassword}

@@ -2,20 +2,20 @@ import React, { useEffect, useReducer, createContext, useMemo } from 'react';
 import axios from 'axios';
 import CookieManager from '@react-native-cookies/cookies';
 
-interface AuthContextValue {
-  userToken: string | null;
+import { User } from '../types';
+import { AuthAction, AuthActionKind, reducer } from '../reducers/AuthReducer';
+import { Alert } from 'react-native';
+
+export interface AuthContextState {
+  user: User | null;
   isLoading: boolean;
   isSignout: boolean;
-  signIn: (data: SignInData) => void;
-  signOut: () => void;
 }
 
-const initialContextValue: AuthContextValue = {
-  userToken: null,
+const initialContextState: AuthContextState = {
+  user: null,
   isLoading: true,
   isSignout: false,
-  signIn: () => {},
-  signOut: () => {},
 };
 
 interface SignInData {
@@ -23,96 +23,86 @@ interface SignInData {
   password: string;
 }
 
-export const AuthContext = createContext<AuthContextValue>(initialContextValue);
+interface AuthContextType {
+  state: AuthContextState;
+  signIn: (data: SignInData) => void;
+  signOut: () => void;
+  dispatch: React.Dispatch<AuthAction>;
+}
+
+export const AuthContext = createContext<AuthContextType>({
+  state: initialContextState,
+  dispatch: () => null,
+  signIn: () => {},
+  signOut: () => {},
+});
 
 export const AuthContextProvider: React.FC = ({ children }) => {
-  const [state, dispatch] = useReducer(
-    (prevState, action) => {
-      switch (action.type) {
-        case 'RESTORE_TOKEN':
-          return {
-            ...prevState,
-            userToken: action.token,
-            isLoading: false,
-          };
-        case 'SIGN_IN':
-          return {
-            ...prevState,
-            isSignout: false,
-            userToken: action.token,
-          };
-        case 'SIGN_OUT':
-          return {
-            ...prevState,
-            isSignout: true,
-            userToken: null,
-          };
-      }
-    },
-    {
-      isLoading: true,
-      isSignout: false,
-      userToken: null,
-    },
-  );
+  const [state, dispatch] = useReducer(reducer, initialContextState);
 
   useEffect(() => {
     // Fetch the token from storage then navigate to our appropriate place
     const bootstrapAsync = async () => {
-      let userToken;
+      let user: User | null = null;
+      let token: string | null = null;
 
       try {
         const cookies = await CookieManager.getAll();
 
-        userToken = cookies?.GBNFL_AUTH?.value || null;
+        token = cookies?.GBNFL_AUTH?.value || null;
       } catch (e) {
         // Restoring token failed
         console.error('restoring token failed');
       }
 
-      // After restoring token, we may need to validate it in production apps
-      try {
-        const me = await axios.get('/user/me');
-        if (!me.data?.id) {
-          userToken = null;
+      if (token) {
+        try {
+          const me = await axios.get('/user/me');
+          user = me.data || null;
+        } catch (e) {
+          console.error('Error getting user');
         }
-      } catch (e) {}
-      console.log('here');
-      dispatch({ type: 'RESTORE_TOKEN', token: userToken });
+      }
+      dispatch({ type: AuthActionKind.RESTORE_TOKEN, user });
     };
 
     bootstrapAsync();
   }, []);
 
-  const authContext = useMemo(
+  const authContextMemo = useMemo(
     () => ({
       signIn: async (data: SignInData) => {
         try {
-          await axios.post('/user/login', {
+          const login = await axios.post('/user/login', {
             email: data.username,
             password: data.password,
           });
-          let userToken;
-          try {
-            const cookies = await CookieManager.getAll();
 
-            userToken = cookies?.GBNFL_AUTH?.value || null;
-          } catch (e) {
-            // Restoring token failed
-          }
-          if (userToken) {
-            dispatch({ type: 'SIGN_IN', token: userToken });
+          if (login?.data?.user) {
+            dispatch({
+              type: AuthActionKind.RESTORE_TOKEN,
+              user: login.data.user,
+            });
           }
         } catch (e) {
+          Alert.alert('Wrong username/password');
           console.error(e);
         }
       },
-      signOut: () => dispatch({ type: 'SIGN_OUT' }),
+      signOut: async () => {
+        console.log('signing out');
+        try {
+          await axios.get('/user/logout');
+        } catch (e) {
+          console.error('There was a problem logging out');
+        }
+        dispatch({ type: AuthActionKind.SIGN_OUT });
+      },
     }),
     [],
   );
   return (
-    <AuthContext.Provider value={{ ...authContext, ...state }}>
+    <AuthContext.Provider value={{ ...authContextMemo, state, dispatch }}>
       {children}
     </AuthContext.Provider>
   );
