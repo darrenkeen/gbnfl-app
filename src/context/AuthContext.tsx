@@ -72,6 +72,7 @@ export const AuthContextProvider: React.FC = ({ children }) => {
   const authContextMemo = useMemo(
     () => ({
       signIn: async (data: SignInData) => {
+        console.log(axios.defaults.baseURL);
         try {
           const login = await axios.post('/user/login', {
             email: data.username,
