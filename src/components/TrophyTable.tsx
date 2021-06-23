@@ -124,16 +124,6 @@ export const TrophyTable: React.FC<TrophyTableProps> = ({
           <Countdown cacheTimestamp={data.lastUpdated} cacheMinutes={30} />
         </View>
       </View>
-      <View style={tailwind('justify-center px-5')}>
-        <Button
-          title="View wins"
-          onPress={() =>
-            navigation.navigate('Season', {
-              season: CURRENT_SEASON,
-            })
-          }
-        />
-      </View>
     </LinearGradient>
   );
 };
