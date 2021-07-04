@@ -8,7 +8,8 @@ import { Stat } from './Stat';
 import { Loader } from './Loader';
 import { View } from 'react-native';
 import { tailwind } from '../utils/tailwind';
-import { CachedData, LastUpdatedData, LifetimeData } from '../types';
+import { LastUpdatedData, LifetimeData } from '../types';
+import { getFriendlyTime } from '../utils/formatDate';
 
 interface GlobalDataProps {
   uno: string;
@@ -43,12 +44,25 @@ export const GlobalData: React.FC<GlobalDataProps> = ({ uno }) => {
       </View>
       <View style={tailwind('flex-row mb-5')}>
         <View style={tailwind('flex-1 mr-5')}>
+          <Stat name="Played" value={lifetimeData.gamesPlayed.toString()} />
+        </View>
+        <View style={tailwind('flex-1')}>
+          <Stat
+            name="Time Played"
+            value={getFriendlyTime(lifetimeData.timePlayed)}
+          />
+        </View>
+      </View>
+      <View style={tailwind('flex-row mb-5')}>
+        <View style={tailwind('flex-1 mr-5')}>
           <Stat name="Wins" value={lifetimeData.wins.toString()} />
         </View>
         <View style={tailwind('flex-1')}>
           <Stat
             name="K/D"
-            value={Number(lifetimeData.kdRatio).toFixed(2).toString()}
+            value={(
+              Math.floor(Number(lifetimeData.kdRatio) * 100) / 100
+            ).toString()}
           />
         </View>
       </View>
@@ -65,9 +79,11 @@ export const GlobalData: React.FC<GlobalDataProps> = ({ uno }) => {
           <Stat
             name="Win %"
             value={
-              ((lifetimeData.wins / lifetimeData.gamesPlayed) * 100)
-                .toFixed(2)
-                .toString() + '%'
+              (
+                Math.floor(
+                  (lifetimeData.wins / lifetimeData.gamesPlayed) * 100 * 100,
+                ) / 100
+              ).toString() + '%'
             }
           />
         </View>
@@ -75,9 +91,11 @@ export const GlobalData: React.FC<GlobalDataProps> = ({ uno }) => {
           <Stat
             name="top 10 %"
             value={
-              ((lifetimeData.topTen / lifetimeData.gamesPlayed) * 100)
-                .toFixed(2)
-                .toString() + '%'
+              (
+                Math.floor(
+                  (lifetimeData.topTen / lifetimeData.gamesPlayed) * 100 * 100,
+                ) / 100
+              ).toString() + '%'
             }
           />
         </View>

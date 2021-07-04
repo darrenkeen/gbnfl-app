@@ -1,19 +1,15 @@
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 
-import { getColor } from '../utils/tailwind';
-import { MainStackScreen } from './MainStack';
-import { PlayerStackScreen } from './PlayerStack';
 import { PlayerContextProvider } from '../context/PlayerContext';
-import { HeaderRight } from '../components/HeaderRight';
-import { ProfileScreen } from '../screens/ProfileScreen';
+import { RootTabStackComponent } from './RootTabStack';
+import { EditGoalsModal } from '../screens/EditGoalsModal';
+import { getColor } from '../utils/tailwind';
 
 export type RootStackParamList = {
   Main: undefined;
-  PlayerStack: {
-    uno: string;
-  };
-  Profile: undefined;
+  Modal: undefined;
 };
 
 const RootStack = createStackNavigator<RootStackParamList>();
@@ -21,40 +17,32 @@ const RootStack = createStackNavigator<RootStackParamList>();
 export const RootStackComponent: React.FC = () => {
   return (
     <PlayerContextProvider>
-      <RootStack.Navigator
-        initialRouteName="Main"
-        screenOptions={{
-          headerStyle: {
-            backgroundColor: getColor('background-1200'),
-            shadowOpacity: 1,
-            shadowColor: getColor('background-1200'),
-            shadowRadius: 5,
-          },
-          headerRight: () => <HeaderRight />,
-          headerTintColor: getColor('white'),
-        }}
-      >
+      <RootStack.Navigator mode="modal">
         <RootStack.Screen
           name="Main"
-          component={MainStackScreen}
-          options={{
-            headerShown: false,
-          }}
+          component={RootTabStackComponent}
+          options={{ headerShown: false }}
         />
         <RootStack.Screen
-          name="PlayerStack"
-          component={PlayerStackScreen}
+          name="Modal"
+          component={EditGoalsModal}
           options={{
-            headerShown: false,
-            headerTitle: 'Player Stats',
-          }}
-        />
-        <RootStack.Screen
-          name="Profile"
-          component={ProfileScreen}
-          options={{
-            headerTitle: 'Edit Profile',
-            cardStyle: { backgroundColor: getColor('background-1000') },
+            cardStyle: {
+              backgroundColor: getColor('background-1000'),
+            },
+            headerStyle: {
+              backgroundColor: getColor('background-1200'),
+              shadowColor: 'transparent',
+            },
+            headerTitle: '',
+            headerBackTitleStyle: {
+              color: 'white',
+              fontSize: 14,
+            },
+            headerBackImage: () => (
+              <Icon name="chevron-left" size={38} color="white" />
+            ),
+            headerBackTitle: 'Back',
           }}
         />
       </RootStack.Navigator>

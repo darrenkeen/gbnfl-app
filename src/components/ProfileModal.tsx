@@ -11,7 +11,6 @@ export const ProfileModal: React.FC<any> = ({
   modalVisible,
   setModalVisible,
 }) => {
-  const navigate = useNavigation();
   const {
     state: { user },
     signOut,
@@ -64,6 +63,7 @@ export const ProfileModal: React.FC<any> = ({
             <TouchableOpacity
               onPress={() => {
                 signOut();
+                setModalVisible(false);
               }}
             >
               <Text

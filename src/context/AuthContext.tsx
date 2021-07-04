@@ -25,7 +25,7 @@ interface SignInData {
 
 interface AuthContextType {
   state: AuthContextState;
-  signIn: (data: SignInData) => void;
+  signIn: (data: SignInData) => boolean;
   signOut: () => void;
   dispatch: React.Dispatch<AuthAction>;
 }
@@ -33,7 +33,7 @@ interface AuthContextType {
 export const AuthContext = createContext<AuthContextType>({
   state: initialContextState,
   dispatch: () => null,
-  signIn: () => {},
+  signIn: () => false,
   signOut: () => {},
 });
 
@@ -84,10 +84,13 @@ export const AuthContextProvider: React.FC = ({ children }) => {
               type: AuthActionKind.RESTORE_TOKEN,
               user: login.data.user,
             });
+            return true;
           }
+          return false;
         } catch (e) {
           Alert.alert('Wrong username/password');
           console.error(e);
+          return false;
         }
       },
       signOut: async () => {

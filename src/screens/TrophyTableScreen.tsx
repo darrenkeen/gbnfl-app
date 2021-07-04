@@ -10,12 +10,12 @@ import { PlayerTabParamList } from '../stacks/PlayerTab';
 import { RootStackParamList } from '../stacks/RootStack';
 import { tailwind } from '../utils/tailwind';
 
-export type HomeNavigationProp = CompositeNavigationProp<
+export type TrophyTableNavigationProp = CompositeNavigationProp<
   BottomTabNavigationProp<PlayerTabParamList>,
   StackNavigationProp<RootStackParamList>
 >;
 
-export const HomeScreen: React.FC = () => {
+export const TrophyTableScreen: React.FC = () => {
   const [refreshing, setRefreshing] = useState(false);
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
@@ -27,7 +27,7 @@ export const HomeScreen: React.FC = () => {
 
   return (
     <ScrollView
-      style={tailwind('pt-10')}
+      style={tailwind('pt-20')}
       refreshControl={
         <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
       }

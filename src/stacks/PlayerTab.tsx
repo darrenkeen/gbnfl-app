@@ -45,7 +45,7 @@ export const PlayerTabScreen = () => (
       name="PlayerLifetime"
       component={PlayerLifetimeScreen}
       options={{
-        title: 'Lifeteime',
+        title: 'Lifetime',
         tabBarLabel: 'Lifetime',
         tabBarIcon: ({ focused }) => (
           <Icon

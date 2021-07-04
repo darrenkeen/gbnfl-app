@@ -1,16 +1,19 @@
 import { NavigatorScreenParams } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import React, { useContext, useEffect } from 'react';
-import { PlayerStateContext } from '../context/PlayerContext';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 
+import { PlayerStateContext } from '../context/PlayerContext';
 import { MatchScreen } from '../screens/MatchScreen';
 import { CachedData, Player } from '../types';
 import { getColor } from '../utils/tailwind';
 import { useFetch } from '../utils/useFetch';
 import { Error } from '../components/Error';
-import { PlayerTabParamList, PlayerTabScreen } from './PlayerTab';
 import { Loader } from '../components/Loader';
 import { HeaderRight } from '../components/HeaderRight';
+import { PlayerHeaderLeft } from '../components/PlayerHeaderLeft';
+
+import { PlayerTabParamList, PlayerTabScreen } from './PlayerTab';
 
 export type PlayerStackParamList = {
   PlayerTabs: NavigatorScreenParams<PlayerTabParamList>;
@@ -64,13 +67,18 @@ export const PlayerStackScreen: React.FC<PlayerStackScreenProps> = ({
           fontSize: 14,
         },
         headerTintColor: getColor('white'),
-        headerRight: () => <HeaderRight />,
+        headerBackImage: () => (
+          <Icon name="chevron-left" size={38} color="white" />
+        ),
       }}
     >
       <PlayerStack.Screen
         name="PlayerTabs"
         component={PlayerTabScreen}
-        options={{ title: `${player?.name}` }}
+        options={{
+          title: `${player?.name}`,
+          headerLeft: () => <PlayerHeaderLeft />,
+        }}
       />
       <PlayerStack.Screen
         name="PlayerMatch"

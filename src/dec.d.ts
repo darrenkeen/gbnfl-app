@@ -3,6 +3,7 @@ declare module '*.png' {
   export = value;
 }
 
+declare module 'react-native-circular-slider';
 declare module 'react-native-dotenv' {
   export const BASE_URL: string;
 }

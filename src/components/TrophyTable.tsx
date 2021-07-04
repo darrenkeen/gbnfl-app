@@ -7,12 +7,10 @@ import { useFetch } from '../utils/useFetch';
 import { getColor, tailwind } from '../utils/tailwind';
 import { generateTrophyEmoji } from '../utils/generateTrophyEmoji';
 
-import { Button } from './Button';
 import { LastUpdatedData, PlayerTrophies } from '../types';
 import { Loader } from './Loader';
-import { HomeNavigationProp } from '../screens/HomeScreen';
+import { TrophyTableNavigationProp } from '../screens/TrophyTableScreen';
 import { CURRENT_SEASON } from '../constants';
-import { LastUpdated } from './LastUpdated';
 import { Countdown } from './Countdown';
 
 interface TrophyTableProps {
@@ -24,7 +22,7 @@ export const TrophyTable: React.FC<TrophyTableProps> = ({
   refreshing,
   onEndRefresh,
 }) => {
-  const navigation = useNavigation<HomeNavigationProp>();
+  const navigation = useNavigation<TrophyTableNavigationProp>();
   const { status, data, error } = useFetch<LastUpdatedData<PlayerTrophies[]>>(
     `/trophies/${CURRENT_SEASON}`,
     { lastUpdated: new Date().toDateString(), data: [] },

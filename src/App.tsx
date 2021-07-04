@@ -19,9 +19,7 @@ const App: React.FC = () => (
     <View style={tailwind('flex-1 bg-background-1000')}>
       <AuthContextProvider>
         <NavigationContainer>
-          <NavigationControl>
-            <NavigationControl />
-          </NavigationControl>
+          <NavigationControl />
         </NavigationContainer>
       </AuthContextProvider>
     </View>

@@ -37,9 +37,15 @@ export const Countdown: React.FC<CountdownProps> = ({
 
   return (
     <Text style={tailwind('text-gray-400')}>
-      Refresh {minutes < 10 && '0'}
-      {minutes}:{seconds < 10 && '0'}
-      {seconds}
+      {counter < 0 ? (
+        <>Refresh 00:00</>
+      ) : (
+        <>
+          Refresh {minutes < 10 && '0'}
+          {minutes}:{seconds < 10 && '0'}
+          {seconds}
+        </>
+      )}
     </Text>
   );
 };

@@ -14,12 +14,12 @@ export const Stat: React.FC<InputGroupProps> = ({ value, name }) => {
       colors={[getColor('background-600'), getColor('background-700')]}
       style={tailwind('px-5 py-2 drop-shadow-lg rounded-xl')}
     >
-      <Text style={tailwind('text-xl font-rubik-bold text-white text-center')}>
+      <Text style={tailwind('text-lg font-rubik-bold text-white text-center')}>
         {value}
       </Text>
       <Text
         style={tailwind(
-          'text-gray-400 uppercase text-base font-rubik-light text-center',
+          'text-gray-400 uppercase text-sm font-rubik-light text-center',
         )}
       >
         {name}

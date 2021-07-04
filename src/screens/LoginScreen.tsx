@@ -1,20 +1,21 @@
 import React, { useState, useContext } from 'react';
-import { View, Image } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { View, Image, ScrollView } from 'react-native';
 import { Input } from 'react-native-elements';
 
 import { AuthContext } from '../context/AuthContext';
 import LogoImage from '../assets/images/logo.png';
 import { tailwind } from '../utils/tailwind';
 import { Button } from '../components/Button';
+import { useNavigation } from '@react-navigation/native';
 
 export const LoginScreen: React.FC = () => {
+  const navigation = useNavigation();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
   const { signIn } = useContext(AuthContext);
   return (
-    <SafeAreaView style={tailwind('bg-background-1000 flex-1')}>
+    <ScrollView style={tailwind('pt-20')}>
       <View style={tailwind('justify-center items-center')}>
         <Image
           source={LogoImage}
@@ -40,9 +41,14 @@ export const LoginScreen: React.FC = () => {
         />
         <Button
           title="Sign in"
-          onPress={() => signIn({ username, password })}
+          onPress={async () => {
+            const signInRes = await signIn({ username, password });
+            if (signInRes) {
+              navigation.navigate('Home');
+            }
+          }}
         />
       </View>
-    </SafeAreaView>
+    </ScrollView>
   );
 };

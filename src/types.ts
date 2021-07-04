@@ -364,3 +364,16 @@ export interface User {
   email: string;
   updatedAt: string;
 }
+
+export interface Goal {
+  goal: string | number;
+  current: number;
+  required: number;
+  isComplete: boolean;
+}
+
+export interface OverallGoal {
+  kd: Goal;
+  winPercent: Goal;
+  topTenPercent: Goal;
+}
