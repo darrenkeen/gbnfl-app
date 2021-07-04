@@ -2,12 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, TouchableOpacity, Alert } from 'react-native';
 import Slider from '@react-native-community/slider';
 import { useNavigation } from '@react-navigation/native';
+import axios from 'axios';
 
 import { getColor, tailwind } from '../utils/tailwind';
 import { OverallGoal } from '../types';
 import { GradientTitle } from './GradientTitle';
 import { Button } from './Button';
-import axios from 'axios';
 
 interface EditGoalsOptionsProps {
   goalData: OverallGoal;
@@ -30,21 +30,33 @@ const getStringKd = (kd: [number, number, number]) => {
 export const EditGoalsOptions: React.FC<EditGoalsOptionsProps> = ({
   goalData,
 }) => {
-  const [isDirty, setIsDirty] = useState(false);
   const [kd, setKd] = useState<[number, number, number]>(
     getKdFromCurrent(goalData.kd),
   );
+  const [isSaved, setIsSaved] = useState(false);
   const [topTenPercent, setTopTenPercent] = useState<number>(
     Number(goalData.topTenPercent.goal),
   );
   const [winPercent, setWinPercent] = useState<number>(
     Number(goalData.winPercent.goal),
   );
+
+  const isDirty =
+    topTenPercent !== Number(goalData.topTenPercent.goal) ||
+    winPercent !== Number(goalData.winPercent.goal) ||
+    getStringKd(kd) !== goalData.kd.goal;
+
   const navigation = useNavigation();
 
   useEffect(() => {
+    if (isSaved) {
+      navigation.goBack();
+    }
+  }, [navigation, isSaved]);
+
+  useEffect(() => {
     const unsubscribe = navigation.addListener('beforeRemove', e => {
-      if (!isDirty) {
+      if (!isDirty || (isDirty && isSaved)) {
         return;
       }
 
@@ -67,7 +79,7 @@ export const EditGoalsOptions: React.FC<EditGoalsOptionsProps> = ({
     });
 
     return unsubscribe;
-  }, [navigation, isDirty]);
+  }, [navigation, isDirty, isSaved]);
 
   const onReset = (item: 'kd' | 'winPercent' | 'topTenPercent' | 'all') => {
     if (item === 'kd') {
@@ -95,7 +107,9 @@ export const EditGoalsOptions: React.FC<EditGoalsOptionsProps> = ({
         winPercent,
         topTenPercent,
       })
-      .then(() => console.log('success'))
+      .then(() => {
+        setIsSaved(true);
+      })
       .catch(e => console.error(e));
   };
 
@@ -142,7 +156,6 @@ export const EditGoalsOptions: React.FC<EditGoalsOptionsProps> = ({
                       const currKd: [number, number, number] = [...kd];
                       currKd[ind] = Number(event.nativeEvent.key) || 0;
                       setKd(() => [...currKd]);
-                      setIsDirty(true);
                     }}
                     maxLength={1}
                     selectionColor="white"
@@ -218,7 +231,6 @@ export const EditGoalsOptions: React.FC<EditGoalsOptionsProps> = ({
             maximumTrackTintColor={getColor('background-100')}
             value={winPercent}
             onValueChange={val => {
-              setIsDirty(true);
               setWinPercent(val);
             }}
           />
@@ -263,7 +275,6 @@ export const EditGoalsOptions: React.FC<EditGoalsOptionsProps> = ({
             value={topTenPercent}
             onValueChange={val => {
               setTopTenPercent(val);
-              setIsDirty(true);
             }}
           />
         </View>

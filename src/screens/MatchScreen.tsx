@@ -19,7 +19,6 @@ import {
   getTeamValueBasedOnKey,
 } from '../utils/teamCalculations';
 import { useState } from 'react';
-import { PlayerStack, PlayerStackScreen } from '../stacks/PlayerStack';
 
 type MatchScreenRouteProp = any;
 
@@ -78,15 +77,6 @@ export const MatchScreen: React.FC<Props> = ({ route }) => {
     <SafeAreaView style={tailwind('h-full')}>
       <ScrollView style={tailwind('pt-10')}>
         <View style={tailwind('mb-10')}>
-          <View style={tailwind('px-5')}>
-            <Button
-              type="outline"
-              onPress={() => {
-                navigation.goBack();
-              }}
-              title="Go back"
-            />
-          </View>
           <View style={tailwind('mb-10')}>
             <Text
               style={tailwind(
@@ -114,7 +104,7 @@ export const MatchScreen: React.FC<Props> = ({ route }) => {
                   )}
                 />
               </View>
-              <View style={tailwind('flex-1 mr-5')}>
+              <View style={tailwind('flex-1')}>
                 <Stat name="Players" value={matchData.playerCount.toString()} />
               </View>
             </View>

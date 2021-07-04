@@ -102,14 +102,18 @@ export const GoalsScreen: React.FC<any> = ({ navigation }) => {
   }
 
   if (status !== 'fetched') {
-    return <Loader />;
+    return (
+      <View style={tailwind('flex-1 justify-center')}>
+        <Loader />
+      </View>
+    );
   }
 
   const goalData = data!.data;
 
   return (
     <ScrollView style={tailwind('mt-10')}>
-      <View style={tailwind('pt-10')}>
+      <View style={tailwind('pt-10 mb-10')}>
         <View style={tailwind('px-5')}>
           <Text style={tailwind('text-white font-rubik-bold text-xl')}>
             Welcome to your goals, {user?.firstName}
