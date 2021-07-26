@@ -1,6 +1,5 @@
 import React from 'react';
 import { SafeAreaView, View, Text, ScrollView } from 'react-native';
-import { useNavigation } from '@react-navigation/core';
 import { format, addMilliseconds } from 'date-fns';
 
 import { tailwind } from '../utils/tailwind';
@@ -40,7 +39,6 @@ const matchDuration = (time: number) => {
 };
 
 export const MatchScreen: React.FC<Props> = ({ route }) => {
-  const navigation = useNavigation();
   const { matchId, uno } = route.params;
   const [showTeamCount, setShowTeamCount] = useState(5);
   const { data, status, error } = useFetch<CachedData<MatchData> | null>(

@@ -377,3 +377,43 @@ export interface OverallGoal {
   winPercent: Goal;
   topTenPercent: Goal;
 }
+
+export enum AchievementType {
+  Kills = 'KILLS',
+  Kd = 'KD',
+  Win = 'WIN',
+  Gulag = 'GULAG',
+  Killer = 'KILLER',
+  TopTen = 'TOP_TEN',
+}
+
+export enum AchievementModifierType {
+  Row = 'ROW',
+  Last = 'LAST',
+  Achieve = 'ACHIEVE',
+}
+
+export enum AchievementScope {
+  Match = 'MATCH',
+  Team = 'TEAM',
+}
+
+export enum AchievementSpecial {
+  NoDeath = 'NO_DEATH',
+  HighestKiller = 'HIGHEST_KILLER',
+  Under250Dmg = 'UNDER_250_DMG',
+}
+
+export interface Achievement {
+  id: string;
+  type: AchievementType;
+  value: number;
+  modifier: number;
+  modifierType: AchievementModifierType;
+  scope: AchievementScope | null;
+  special: AchievementSpecial[];
+}
+
+export interface PlayerAchievement extends Achievement {
+  achieved: boolean;
+}
