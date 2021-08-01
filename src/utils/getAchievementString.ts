@@ -52,3 +52,24 @@ export const getTypeString = (type: AchievementType) => {
     }
   }
 };
+
+export const getTitleString = (type: AchievementType): string => {
+  switch (type) {
+    case AchievementType.Kills: {
+      return 'Kills';
+    }
+    case AchievementType.Killer: {
+      return 'Highest team kills';
+    }
+    case AchievementType.TopTen: {
+      return 'Top ten finish';
+    }
+    case AchievementType.Win: {
+      return 'Win';
+    }
+    case AchievementType.Gulag: {
+      return 'Gulag';
+    }
+  }
+  return '';
+};

@@ -58,21 +58,6 @@ export const PlayerTabScreen = () => (
       }}
     />
     <PlayerTab.Screen
-      name="PlayerAchievment"
-      component={PlayerAchievementScreen}
-      options={{
-        title: 'Achievement',
-        tabBarLabel: 'Achievement',
-        tabBarIcon: ({ focused }) => (
-          <Icon
-            name="heartbeat"
-            size={20}
-            style={tailwind(focused ? 'text-white' : 'text-background-900')}
-          />
-        ),
-      }}
-    />
-    <PlayerTab.Screen
       name="PlayerWeekly"
       component={PlayerWeeklyScreen}
       options={{
@@ -108,6 +93,21 @@ export const PlayerTabScreen = () => (
         tabBarIcon: ({ focused }) => (
           <Icon
             name="align-justify"
+            size={20}
+            style={tailwind(focused ? 'text-white' : 'text-background-900')}
+          />
+        ),
+      }}
+    />
+    <PlayerTab.Screen
+      name="PlayerAchievment"
+      component={PlayerAchievementScreen}
+      options={{
+        title: 'Achievements',
+        tabBarLabel: 'Achievements',
+        tabBarIcon: ({ focused }) => (
+          <Icon
+            name="award"
             size={20}
             style={tailwind(focused ? 'text-white' : 'text-background-900')}
           />

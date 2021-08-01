@@ -414,6 +414,15 @@ export interface Achievement {
   special: AchievementSpecial[];
 }
 
-export interface PlayerAchievement extends Achievement {
+interface AchievementWithAchieved extends Achievement {
   achieved: boolean;
+}
+
+export interface PlayerAchievementWithMeta {
+  _meta: {
+    total: number;
+    achieved: number;
+    percentage: number;
+  };
+  achievements: Record<AchievementType, AchievementWithAchieved[]>;
 }
