@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { SafeAreaView, View, Text, ScrollView } from 'react-native';
 import { format, addMilliseconds } from 'date-fns';
 
@@ -8,7 +8,6 @@ import { Loader } from '../components/Loader';
 import { Error } from '../components/Error';
 
 import { CachedData, MatchData } from '../types';
-import { MODE_KEYS } from '../constants';
 import { MainTitle } from '../components/MainTitle';
 import { Stat } from '../components/Stat';
 import { PlayerGroup } from '../components/PlayerGroup';
@@ -18,6 +17,7 @@ import {
   getTeamValueBasedOnKey,
 } from '../utils/teamCalculations';
 import { useState } from 'react';
+import { AuthContext } from '../context/AuthContext';
 
 type MatchScreenRouteProp = any;
 
@@ -39,6 +39,9 @@ const matchDuration = (time: number) => {
 };
 
 export const MatchScreen: React.FC<Props> = ({ route }) => {
+  const {
+    state: { gameModes },
+  } = useContext(AuthContext);
   const { matchId, uno } = route.params;
   const [showTeamCount, setShowTeamCount] = useState(5);
   const { data, status, error } = useFetch<CachedData<MatchData> | null>(
@@ -81,7 +84,7 @@ export const MatchScreen: React.FC<Props> = ({ route }) => {
                 'text-2xl font-rubik-bold text-white text-center',
               )}
             >
-              {MODE_KEYS[matchData.mode]}
+              {gameModes[matchData.mode]?.name || matchData.mode}
             </Text>
             <Text
               style={tailwind(

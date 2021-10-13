@@ -1,14 +1,14 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Text, View } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 
-import { MODE_KEYS, WITH_RANK_MODE } from '../constants';
+import { AuthContext } from '../context/AuthContext';
 import { WinMatchPlayer } from '../types';
 import { numberWithCommas } from '../utils/numberWithCommas';
 import { getColor, tailwind } from '../utils/tailwind';
 
 interface PlayerGroupProps {
-  mode: keyof typeof MODE_KEYS;
+  mode: string;
   rank: number;
   kills: number;
   teamKdRatio: number;
@@ -103,6 +103,9 @@ export const PlayerGroup: React.FC<PlayerGroupProps> = ({
   teamKdRatio,
   players,
 }) => {
+  const {
+    state: { gameModes },
+  } = useContext(AuthContext);
   return (
     <View style={tailwind('mb-5')}>
       <LinearGradient
@@ -112,7 +115,7 @@ export const PlayerGroup: React.FC<PlayerGroupProps> = ({
         <View style={tailwind('flex-row justify-between ')}>
           <PlayerGroupItem title="Kills" value={kills} />
           <PlayerGroupItem title="K/D" value={teamKdRatio?.toFixed(2)} />
-          {WITH_RANK_MODE.includes(mode) && (
+          {gameModes[mode]?.isRanked && (
             <PlayerGroupItem title="rank" value={rank} />
           )}
         </View>

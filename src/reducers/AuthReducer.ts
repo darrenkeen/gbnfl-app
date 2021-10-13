@@ -1,10 +1,14 @@
 import { AuthContextState } from '../context/AuthContext';
-import { User } from '../types';
+import { GameModes, User } from '../types';
 
 export type AuthAction =
   | { type: AuthActionKind.SIGN_OUT }
   | { type: AuthActionKind.SIGN_IN; user: User }
-  | { type: AuthActionKind.RESTORE_TOKEN; user: User | null };
+  | {
+      type: AuthActionKind.RESTORE_TOKEN;
+      user: User | null;
+      gameModes: GameModes;
+    };
 
 export enum AuthActionKind {
   RESTORE_TOKEN = 'RESTORE_TOKEN',
@@ -21,6 +25,7 @@ export const reducer = (
       return {
         ...state,
         user: action.user,
+        gameModes: action.gameModes,
         isLoading: false,
       };
     case AuthActionKind.SIGN_IN:

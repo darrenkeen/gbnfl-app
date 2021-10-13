@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -6,10 +6,10 @@ import Icon5 from 'react-native-vector-icons/FontAwesome5';
 import { useNavigation } from '@react-navigation/core';
 
 import { formatDate } from '../utils/formatDate';
-import { MODE_KEYS, WITH_RANK_MODE } from '../constants';
 import { getColor, tailwind } from '../utils/tailwind';
 import { PlayerLifetimeScreenNavigationProp } from '../screens/Player/PlayerLifetimeScreen';
 import { numberWithCommas } from '../utils/numberWithCommas';
+import { AuthContext } from '../context/AuthContext';
 
 interface MatchProps {
   kills: number;
@@ -20,7 +20,7 @@ interface MatchProps {
   gulagKills: number;
   gulagDeaths: number;
   matchId: string;
-  mode: keyof typeof MODE_KEYS;
+  mode: string;
   uno: string;
 }
 
@@ -89,6 +89,9 @@ export const Match: React.FC<MatchProps> = ({
   uno,
 }) => {
   const navigation = useNavigation<PlayerLifetimeScreenNavigationProp>();
+  const {
+    state: { gameModes },
+  } = useContext(AuthContext);
 
   return (
     <TouchableOpacity
@@ -107,15 +110,13 @@ export const Match: React.FC<MatchProps> = ({
         <View style={tailwind('flex-row justify-between mb-5')}>
           <View style={tailwind('text-left')}>
             <Text style={tailwind('font-bold text-white')}>
-              {MODE_KEYS[mode]}
+              {gameModes[mode]?.name || mode}
             </Text>
             <Text style={tailwind('text-white')}>
               {formatDate(startSeconds)}
             </Text>
           </View>
-          {WITH_RANK_MODE.includes(mode) && (
-            <MatchItem title="rank" value={rank} />
-          )}
+          {gameModes[mode]?.isRanked && <MatchItem title="rank" value={rank} />}
         </View>
         <View style={tailwind('flex-row justify-between')}>
           <MatchItem title="Kills" value={kills} />

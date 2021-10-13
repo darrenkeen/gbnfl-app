@@ -1,4 +1,4 @@
-import { MODE_KEYS, PLATFORM_TYPE } from './constants';
+import { PLATFORM_TYPE } from './constants';
 
 export interface PlayerTrophies {
   name: string;
@@ -102,7 +102,7 @@ export interface MatchData {
   id: string;
   inGameMatchId: string;
   playerCount: number;
-  mode: keyof typeof MODE_KEYS;
+  mode: string;
   utcStartSeconds: number;
   utcEndSeconds: number;
   teams: MatchDataTeam[];
@@ -115,7 +115,7 @@ export interface CodLatestData {
 export interface CodLatestMatch {
   utcStartSeconds: number;
   utcEndSeconds: number;
-  mode: keyof typeof MODE_KEYS;
+  mode: string;
   matchID: string;
   duration: number;
   gameType: 'wz';
@@ -285,7 +285,7 @@ export interface WinMatchData {
     teamName: string;
   }[];
   playerCount: number;
-  mode: keyof typeof MODE_KEYS;
+  mode: string;
   duration: number;
   utcStartSeconds: number;
   utcEndSeconds: number;
@@ -293,7 +293,7 @@ export interface WinMatchData {
 }
 
 export type WeeklyPlayerModes = Record<
-  keyof typeof MODE_KEYS,
+  string,
   {
     updatedAt: string;
     mode: string;
@@ -314,7 +314,7 @@ export type WeeklyPlayerModes = Record<
 
 export interface WeeklyPlayerModeType {
   updatedAt: string;
-  mode: keyof typeof MODE_KEYS;
+  mode: string;
   kills: number;
   deaths: number;
   assists: number;
@@ -343,8 +343,8 @@ export interface LatestMatchesResponse {
   matches: CodLatestMatch[];
 }
 
-export interface SeasonStatsResponse {
-  mode: keyof typeof MODE_KEYS;
+export type SeasonStatsResponse = Array<{
+  mode: string;
   gamesPlayed: number;
   wins: number;
   kills: number;
@@ -353,8 +353,7 @@ export interface SeasonStatsResponse {
   assists: number;
   gulagWins: number;
   gulagLosses: number;
-}
-[];
+}>;
 
 export interface User {
   id: string;
@@ -426,3 +425,11 @@ export interface PlayerAchievementWithMeta {
   };
   achievements: Record<AchievementType, AchievementWithAchieved[]>;
 }
+
+export interface GameMode {
+  name: string;
+  isRanked: boolean;
+  isTrophy: boolean;
+}
+
+export type GameModes = Record<string, GameMode>;

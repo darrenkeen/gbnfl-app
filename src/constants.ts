@@ -1,4 +1,6 @@
-export const MODE_KEYS = {
+import { ModeKeys } from './types';
+
+export const MODE_KEYS: ModeKeys = {
   all: 'All',
   br_brsolo: 'Solos',
   br_brz_brsolo: 'Solos',
@@ -11,11 +13,13 @@ export const MODE_KEYS = {
   br_dmz_plnbld: 'Blood Money',
   br_dmz_plunquad: 'Blood Money',
   br_reveal_dov: 'Event',
-  br_rebirth_rbrthquad: 'Rebirth',
+  br_rebirth_rbrthquad: 'Rebirth Quads',
+  br_rebirth_rbrthtrios: 'Rebirth Trios',
   br_mini_rebirth_mini_royale_duos: 'Rebirth Mini',
   br_kingslayer_kingsltrios: 'Kingslayer Trios',
   br_kingslayer_rebirth_king_slayer: 'Kingslayer Rebirth',
   br_mini_miniroyale: 'Mini Royale',
+  'br_rumble_lua_menu_mp/clash': 'Clash',
 };
 
 export const WITH_RANK_MODE = [
@@ -38,4 +42,4 @@ export const PLATFORM_TYPE = {
   psn: 'PlayStation',
 };
 
-export const CURRENT_SEASON = 5;
+export const CURRENT_SEASON = 6;

@@ -1,8 +1,8 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useContext } from 'react';
 import { Text, View } from 'react-native';
 
 import { useFetch } from '../utils/useFetch';
-import { CURRENT_SEASON, MODE_KEYS } from '../constants';
+import { CURRENT_SEASON } from '../constants';
 import { getColor, tailwind } from '../utils/tailwind';
 import { LastUpdatedData, SeasonStatsResponse } from '../types';
 
@@ -13,12 +13,16 @@ import LinearGradient from 'react-native-linear-gradient';
 import { getGulagWinPercent } from '../utils/getGulagWinPercent';
 import { LastUpdated } from './LastUpdated';
 import { Countdown } from './Countdown';
+import { AuthContext } from '../context/AuthContext';
 
 interface WeeklyPlayerProps {
   uno: string;
 }
 
 export const SeasonStats: React.FC<WeeklyPlayerProps> = ({ uno }) => {
+  const {
+    state: { gameModes },
+  } = useContext(AuthContext);
   const {
     data,
     status,
@@ -49,8 +53,8 @@ export const SeasonStats: React.FC<WeeklyPlayerProps> = ({ uno }) => {
       {seasonData
         .sort(
           (a, b) =>
-            Object.keys(MODE_KEYS).indexOf(a.mode) -
-            Object.keys(MODE_KEYS).indexOf(b.mode),
+            Object.keys(gameModes).indexOf(a.mode) -
+            Object.keys(gameModes).indexOf(b.mode),
         )
         .map((gameMode, ind) => (
           <Fragment key={gameMode.mode}>
@@ -66,7 +70,8 @@ export const SeasonStats: React.FC<WeeklyPlayerProps> = ({ uno }) => {
               ]}
             >
               <Text style={tailwind('text-center text-white uppercase')}>
-                {MODE_KEYS[gameMode.mode]} - {gameMode.gamesPlayed} games
+                {gameModes[gameMode.mode]?.name || gameMode.mode} -{' '}
+                {gameMode.gamesPlayed} games
               </Text>
             </LinearGradient>
             <View style={tailwind('px-5')}>

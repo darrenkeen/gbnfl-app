@@ -2,7 +2,7 @@ import React, { useEffect, useReducer, createContext, useMemo } from 'react';
 import axios from 'axios';
 import CookieManager from '@react-native-cookies/cookies';
 
-import { User } from '../types';
+import { GameModes, User } from '../types';
 import { AuthAction, AuthActionKind, reducer } from '../reducers/AuthReducer';
 import { Alert } from 'react-native';
 
@@ -10,12 +10,14 @@ export interface AuthContextState {
   user: User | null;
   isLoading: boolean;
   isSignout: boolean;
+  gameModes: GameModes;
 }
 
 const initialContextState: AuthContextState = {
   user: null,
   isLoading: true,
   isSignout: false,
+  gameModes: {},
 };
 
 interface SignInData {
@@ -63,7 +65,13 @@ export const AuthContextProvider: React.FC = ({ children }) => {
           console.error('Error getting user');
         }
       }
-      dispatch({ type: AuthActionKind.RESTORE_TOKEN, user });
+
+      const gameModes = await axios.get('/data/game-modes');
+      dispatch({
+        type: AuthActionKind.RESTORE_TOKEN,
+        user,
+        gameModes: gameModes.data.data,
+      });
     };
 
     bootstrapAsync();

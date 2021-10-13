@@ -1,11 +1,10 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useContext } from 'react';
 import LinearGradient from 'react-native-linear-gradient';
 import { Text, View } from 'react-native';
 
 import { useFetch } from '../utils/useFetch';
-import { MODE_KEYS } from '../constants';
 import { getColor, tailwind } from '../utils/tailwind';
-import { CachedData, LastUpdatedData, WeeklyPlayerType } from '../types';
+import { LastUpdatedData, WeeklyPlayerType } from '../types';
 
 import { Stat } from './Stat';
 import { Loader } from './Loader';
@@ -15,12 +14,16 @@ import { Error } from './Error';
 import { formatDate } from '../utils/formatDate';
 import { numberWithCommas } from '../utils/numberWithCommas';
 import { getGulagWinPercent } from '../utils/getGulagWinPercent';
+import { AuthContext } from '../context/AuthContext';
 
 interface WeeklyPlayerProps {
   uno: string;
 }
 
 export const WeeklyPlayer: React.FC<WeeklyPlayerProps> = ({ uno }) => {
+  const {
+    state: { gameModes },
+  } = useContext(AuthContext);
   const {
     data,
     status,
@@ -49,8 +52,8 @@ export const WeeklyPlayer: React.FC<WeeklyPlayerProps> = ({ uno }) => {
       {data.data.modes
         .sort(
           (a, b) =>
-            Object.keys(MODE_KEYS).indexOf(a.mode) -
-            Object.keys(MODE_KEYS).indexOf(b.mode),
+            Object.keys(gameModes).indexOf(a.mode) -
+            Object.keys(gameModes).indexOf(b.mode),
         )
         .map((mode, ind) => (
           <Fragment key={mode.mode}>
@@ -66,7 +69,8 @@ export const WeeklyPlayer: React.FC<WeeklyPlayerProps> = ({ uno }) => {
               ]}
             >
               <Text style={tailwind('text-center text-white uppercase')}>
-                {MODE_KEYS[mode.mode]} - {mode.matchesPlayed} games
+                {gameModes[mode.mode]?.name || mode.mode} - {mode.matchesPlayed}{' '}
+                games
               </Text>
             </LinearGradient>
             <View style={tailwind('px-5')}>
